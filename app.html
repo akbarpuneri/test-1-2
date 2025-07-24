@@ -32,6 +32,39 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Softer, deeper shadow */
             border: none; /* No explicit border, rely on shadow */
         }
+        .header-app {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .header-app h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #1a202c;
+            letter-spacing: -0.03em;
+        }
+        .user-info {
+            font-weight: 600;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+        .logout-btn:hover {
+            background-color: #c82333;
+        }
         .section-title {
             font-size: 2rem; /* Larger, more prominent */
             font-weight: 700; /* Bolder */
@@ -142,39 +175,6 @@
             gap: 1.5rem; /* More space */
         }
 
-        /* Slider styles (adjusted for better vertical alignment and theme) */
-        .switch-toggle {
-            width: 260px; /* Wider for better text spacing */
-            height: 52px; /* Taller */
-            background-color: #e9ecef; /* Lighter gray background */
-            border-radius: 26px;
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1); /* Deeper inner shadow */
-        }
-        .switch-toggle .slider {
-            width: 130px; /* Half of new width */
-            height: 100%;
-            background: linear-gradient(to right, #007bff, #0056b3); /* Blue gradient for slider thumb */
-            border-radius: 26px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25); /* More prominent thumb shadow */
-        }
-        .switch-toggle input:checked + .slider {
-            transform: translateX(130px); /* Move for reviewer */
-        }
-        .switch-toggle .labels {
-            font-weight: 600;
-            color: #6c757d; /* Softer gray for inactive text */
-        }
-        .switch-toggle .labels span {
-            line-height: 52px; /* Match new height for perfect vertical centering */
-            font-size: 1.05rem; /* Slightly larger font */
-        }
-        .switch-toggle input:not(:checked) ~ .labels span:first-child {
-            color: white;
-        }
-        .switch-toggle input:checked ~ .labels span:last-child {
-            color: white;
-        }
-
         /* Memo card styles (enhanced) */
         .memo-card {
             padding: 1.5rem; /* More padding */
@@ -257,18 +257,13 @@
 </head>
 <body>
     <div id="app" class="container">
-        <h1 class="text-3xl font-bold text-center mb-10 text-gray-800">Sistem Nota Analisa Investasi</h1>
-
-        <div class="flex justify-center gap-4 mb-10">
-            <label class="switch-toggle">
-                <input type="checkbox" id="view-switcher">
-                <span class="slider"></span>
-                <div class="labels">
-                    <span>Pengusul</span>
-                    <span>Peninjau</span>
-                </div>
-            </label>
-        </div>
+        <header class="header-app">
+            <h1>Sistem Nota Analisa Investasi</h1>
+            <div class="user-info">
+                <span id="current-user-role"></span>
+                <button id="logout-btn" class="logout-btn">Logout</button>
+            </div>
+        </header>
 
         <!-- Bagian Pengusul -->
         <div id="proposer-view" class="p-8 bg-white rounded-xl shadow-lg border border-gray-200">
@@ -399,11 +394,12 @@
         let currentMemoId = null; // To keep track of the memo being reviewed
         let proposerChartInstance = null; // To store Chart.js instance for proposer view
         let reviewerChartInstance = null; // To store Chart.js instance for reviewer view
+        let currentUserRole = localStorage.getItem('currentUserRole'); // Get role from localStorage
 
         // DOM Elements
         const proposerView = document.getElementById('proposer-view');
         const reviewerView = document.getElementById('reviewer-view');
-        const viewSwitcher = document.getElementById('view-switcher'); // The new slider checkbox
+        // const viewSwitcher = document.getElementById('view-switcher'); // Removed slider
         const memoForm = document.getElementById('memo-form');
         const financialCsvInput = document.getElementById('financial-csv');
         const financialDataPreview = document.getElementById('financial-data-preview');
@@ -422,6 +418,9 @@
 
         const proposerMessageBox = document.getElementById('proposer-message-box');
         const reviewerMessageBox = document.getElementById('reviewer-message-box');
+
+        const currentUserRoleSpan = document.getElementById('current-user-role');
+        const logoutBtn = document.getElementById('logout-btn');
 
         // Modal Elements
         const customModal = document.getElementById('custom-modal');
@@ -795,7 +794,7 @@
                     }
                 }
 
-                if (notificationMessage) {
+                if (notificationMessage && currentUserRole === 'reviewer') { // Only show notification to reviewer
                     displayMessage(reviewerMessageBox, notificationMessage, 'warning');
                 }
 
@@ -882,6 +881,19 @@
             reviewerMemoDetailDiv.classList.remove('hidden');
             // Render chart for reviewer view
             reviewerChartInstance = renderFinancialChart('reviewerFinancialChart', memo.financialData, reviewerChartInstance);
+
+            // Disable comment/action buttons if not a reviewer
+            if (currentUserRole !== 'reviewer') {
+                reviewerCommentInput.setAttribute('disabled', 'true');
+                submitCommentBtn.setAttribute('disabled', 'true');
+                approveMemoBtn.setAttribute('disabled', 'true');
+                rejectMemoBtn.setAttribute('disabled', 'true');
+            } else {
+                reviewerCommentInput.removeAttribute('disabled');
+                submitCommentBtn.removeAttribute('disabled');
+                approveMemoBtn.removeAttribute('disabled');
+                rejectMemoBtn.removeAttribute('disabled');
+            }
         }
 
         submitCommentBtn.addEventListener('click', () => {
@@ -944,43 +956,44 @@
             reviewerMemoDetailDiv.classList.add('hidden');
         });
 
-        // --- View Switching Logic ---
+        // --- View Switching Logic (based on login role) ---
 
-        function showView(viewName) {
+        function showView(role) {
             proposerView.classList.add('hidden');
             reviewerView.classList.add('hidden');
 
-            // Disable/enable form fields based on view
-            const formInputs = memoForm.querySelectorAll('input, textarea, button[type="submit"]');
-            if (viewName === 'proposer') {
+            // Update header text based on role
+            currentUserRoleSpan.textContent = `Anda masuk sebagai: ${role === 'proposer' ? 'Pengusul' : 'Peninjau'}`;
+
+            // Adjust visibility of sections based on role
+            if (role === 'proposer') {
                 proposerView.classList.remove('hidden');
-                formInputs.forEach(input => input.removeAttribute('disabled'));
-            } else if (viewName === 'reviewer') {
+                // Ensure proposer form elements are enabled
+                memoForm.querySelectorAll('input, textarea, button[type="submit"]').forEach(el => el.removeAttribute('disabled'));
+            } else if (role === 'reviewer') {
                 reviewerView.classList.remove('hidden');
-                formInputs.forEach(input => input.setAttribute('disabled', 'true'));
+                // Ensure proposer form elements are disabled when reviewer is active
+                memoForm.querySelectorAll('input, textarea, button[type="submit"]').forEach(el => el.setAttribute('disabled', 'true'));
                 renderReviewerList(); // Refresh reviewer list when entering view
             }
         }
 
-        // Event listener for the slider
-        viewSwitcher.addEventListener('change', (event) => {
-            if (event.target.checked) {
-                // Checked means Reviewer
-                showView('reviewer');
-            } else {
-                // Unchecked means Proposer
-                showView('proposer');
-            }
+        // Logout functionality
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('currentUserRole'); // Clear the stored role
+            window.location.href = 'index.html'; // Redirect to login page
         });
 
-        // Initial load
+
+        // Initial load: Check for stored role and redirect if not logged in
         document.addEventListener('DOMContentLoaded', () => {
-            // Set initial state of the slider and view
-            viewSwitcher.checked = false; // Default to Proposer
-            showView('proposer');
+            if (!currentUserRole) {
+                window.location.href = 'index.html'; // Redirect to login if no role found
+                return;
+            }
+            showView(currentUserRole);
 
             // Periodically check for review deadlines (simplified for client-side app)
-            // This interval will trigger renderReviewerList, which handles notifications
             setInterval(renderReviewerList, 10 * 1000); // Check every 10 seconds for demo purposes
         });
     </script>
