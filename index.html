@@ -413,7 +413,10 @@
 
     <script>
         // Global state for memos
+        // CORRECTED: Ensure localStorage key is consistent
         let memos = JSON.parse(localStorage.getItem('investmentMemos')) || [];
+        console.log('Memos loaded on startup:', memos); // Debugging log
+
         let currentFinancialData = null;
         let currentMemoId = null; // To keep track of the memo being reviewed
         let proposerChartInstance = null; // To store Chart.js instance for proposer view
@@ -483,6 +486,7 @@
 
         function saveMemos() {
             localStorage.setItem('investmentMemos', JSON.stringify(memos));
+            console.log('Memos saved:', memos); // Debugging log
         }
 
         function generateUniqueId() {
@@ -499,16 +503,20 @@
                 const parts = line.split(',');
                 if (parts.length >= 2) {
                     const key = parts[0].trim();
-                    let value = parts.slice(1).join(',').trim(); // Join remaining parts for value
+                    let valueStr = parts.slice(1).join(',').trim(); // Keep as string for initial check
 
-                    // Attempt to parse numerical values, handling commas and percentage signs
-                    if (!isNaN(parseFloat(value.replace(/,/g, '')))) {
-                        value = parseFloat(value.replace(/,/g, ''));
-                        if (value.toString().endsWith('%')) { // If it was originally a percentage string
-                             value = value / 100; // Convert to decimal
-                        }
-                    } else if (value.endsWith('%')) { // Handle cases like "10%"
-                        value = parseFloat(value.slice(0, -1).replace(/,/g, '')) / 100;
+                    let value;
+                    // First, try to parse as percentage if it ends with '%'
+                    if (valueStr.endsWith('%')) {
+                        value = parseFloat(valueStr.slice(0, -1).replace(/,/g, '')) / 100;
+                    } else {
+                        // Otherwise, try to parse as a regular number
+                        value = parseFloat(valueStr.replace(/,/g, ''));
+                    }
+
+                    // If parsing failed, keep the original string value
+                    if (isNaN(value)) {
+                        value = valueStr;
                     }
                     result[key] = value;
                 }
@@ -554,7 +562,7 @@
             for (const metric in metricsToChart) {
                 if (financialData[metric] !== undefined && financialData[metric] !== null) {
                     let value = financialData[metric];
-                    // Ensure value is a number
+                    // Ensure value is a number for charting
                     if (typeof value === 'string') {
                         value = parseFloat(value.replace(/,/g, ''));
                         if (value.toString().endsWith('%')) { // If it was originally a percentage string
@@ -708,7 +716,7 @@
             };
 
             memos.push(newMemo);
-            saveMemos();
+            saveMemos(); // Save memos after adding a new one
             renderMemoPreview(newMemo);
             displayMessage(proposerMessageBox, 'Nota Analisa Investasi berhasil dibuat dan diajukan!', 'success');
             memoForm.reset(); // Clear form
@@ -797,7 +805,10 @@
                     } else if (now > reviewDeadline) {
                         statusText = `<span class="font-semibold text-orange-600">PERINGATAN (Lewat 3 Hari)</span>`;
                         cardClasses += ' warning'; // Highlight
-                        notificationMessage = `Peringatan: Nota "${memo.proposerName}" (ID: ${memo.id.substring(0, 8)}) telah melewati batas waktu 3 hari peninjauan.`;
+                        // Only show warning if not already auto-sent
+                        if (!memo.autoSent) {
+                            notificationMessage = `Peringatan: Nota "${memo.proposerName}" (ID: ${memo.id.substring(0, 8)}) telah melewati batas waktu 3 hari peninjauan.`;
+                        }
                     }
                 }
 
@@ -817,6 +828,7 @@
                 memoCard.addEventListener('click', () => viewMemoDetails(memo.id));
                 memoListDiv.appendChild(memoCard);
             });
+            console.log('Reviewer list rendered. Memos count:', memos.length); // Debugging log
         }
 
         function viewMemoDetails(memoId) {
@@ -899,12 +911,17 @@
             const memoIndex = memos.findIndex(m => m.id === currentMemoId);
             if (memoIndex > -1) {
                 // For simplicity, using a generic reviewer ID. In a real app, this would be authenticated user ID.
-                const reviewerId = 'Peninjau_1';
+                const reviewerId = 'Peninjau_1'; // Example reviewer ID
                 memos[memoIndex].reviewerComments.push({
                     reviewerId: reviewerId,
                     comment: commentText,
                     date: new Date().toISOString()
                 });
+                // Ensure the memo status is still 'pending' if a comment is added
+                if (memos[memoIndex].status === 'Dikembalikan untuk Revisi/Tindak Lanjut') {
+                    memos[memoIndex].status = 'pending'; // Change back to pending if it was returned
+                    memos[memoIndex].autoSent = false; // Reset auto-sent flag
+                }
                 saveMemos();
                 displayMessage(reviewerMessageBox, 'Komentar berhasil ditambahkan.', 'success');
                 reviewerCommentInput.value = ''; // Clear comment field
@@ -930,6 +947,8 @@
             const memoIndex = memos.findIndex(m => m.id === currentMemoId);
             if (memoIndex > -1) {
                 memos[memoIndex].status = status;
+                // Reset auto-sent flag if action is taken
+                memos[memoIndex].autoSent = false;
                 saveMemos();
                 displayMessage(reviewerMessageBox, `Nota berhasil ${status === 'approved' ? 'disetujui' : 'ditolak'}.`, 'success');
                 renderReviewerList(); // Go back to list and refresh
