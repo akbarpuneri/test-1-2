@@ -4,91 +4,895 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nota Analisa Investasi</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN for interactive graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 0.5rem;
+        }
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            color: #374151;
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+        .btn-primary {
+            background-color: #3b82f6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-primary:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background-color: #6b7280;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-secondary:hover {
+            background-color: #4b5563;
+            transform: translateY(-1px);
+        }
+        .btn-warning {
+            background-color: #f59e0b;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-warning:hover {
+            background-color: #d97706;
+            transform: translateY(-1px);
+        }
+        .btn-danger {
+            background-color: #ef4444;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .btn-danger:hover {
+            background-color: #dc2626;
+            transform: translateY(-1px);
+        }
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+        .alert-success {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        .alert-error {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .alert-warning {
+            background-color: #fffbeb;
+            color: #92400e;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        }
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Slider styles */
+        .switch-toggle {
+            position: relative;
+            display: inline-block;
+            width: 200px; /* Increased width for better text display */
+            height: 40px; /* Increased height */
+            background-color: #e5e7eb;
+            border-radius: 20px; /* Half of height for pill shape */
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .switch-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .switch-toggle .slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #3b82f6; /* Blue for active state */
+            border-radius: 20px;
+            transition: transform 0.3s ease;
+            transform: translateX(0); /* Initial position for proposer */
+        }
+
+        .switch-toggle input:checked + .slider {
+            transform: translateX(100px); /* Move for reviewer */
+        }
+
+        .switch-toggle .labels {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-weight: 600;
+            color: #4b5563; /* Gray for inactive text */
+            z-index: 1;
+        }
+
+        .switch-toggle .labels span {
+            flex: 1;
+            text-align: center;
+            transition: color 0.3s ease;
+            user-select: none; /* Prevent text selection */
+        }
+
+        .switch-toggle input:not(:checked) ~ .labels span:first-child {
+            color: white; /* White for active proposer text */
+        }
+
+        .switch-toggle input:checked ~ .labels span:last-child {
+            color: white; /* White for active reviewer text */
+        }
+
+        /* Adjust slider width for labels */
+        .switch-toggle .slider {
+            width: 100px; /* Half of the total width */
+        }
+        .switch-toggle input:checked + .slider {
+            transform: translateX(100px); /* Move to the right half */
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Sistem Nota Analisa Investasi</h1>
-        <nav>
-            <button id="btnProposer" class="active">Proposer</button>
-            <button id="btnReviewer">Reviewer</button>
-        </nav>
-    </header>
+    <div id="app" class="container">
+        <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Sistem Nota Analisa Investasi</h1>
 
-    <main>
-        <section id="proposerView" class="view active">
-            <h2>Buat Nota Analisa Investasi Baru</h2>
-            <form id="notaForm">
-                <fieldset>
-                    <legend>1. Finansial / Bisnis (Unggah CSV)</legend>
-                    <p>Data finansial akan diisi dari file CSV yang diunggah. Pastikan format CSV memiliki header yang jelas (misal: `Metrik,Nilai`).</p>
-                    <label for="financialCsv">Unggah File CSV Finansial:</label>
-                    <input type="file" id="financialCsv" accept=".csv" required onchange="validateCsvFile()">
-                    <div id="csvPreview" class="csv-preview"></div>
-                    <p class="validation-message" id="csvValidationMessage"></p>
-                </fieldset>
+        <div class="flex justify-center gap-4 mb-8">
+            <label class="switch-toggle">
+                <input type="checkbox" id="view-switcher">
+                <span class="slider"></span>
+                <div class="labels">
+                    <span>Pengusul</span>
+                    <span>Peninjau</span>
+                </div>
+            </label>
+        </div>
 
-                <fieldset>
-                    <legend>2. Kepentingan / Objektivitas / Tujuan</legend>
-                    <textarea id="aspekKepentingan" rows="4" required placeholder="Diisi Penjelasan singkat sesuai dengan penjelasan pada kajian aspek Kepentingan/Objektivitas/Tujuan menunjukkan bahwa …." aria-label="Aspek Kepentingan"></textarea>
-                    <p class="validation-message" id="aspekKepentinganValidationMessage"></p>
-                </fieldset>
+        <!-- Bagian Pengusul -->
+        <div id="proposer-view" class="p-6 bg-white rounded-xl shadow-lg">
+            <h2 class="section-title">Buat Nota Analisa Investasi</h2>
+            <div id="proposer-message-box" class="alert hidden"></div>
 
-                <fieldset>
-                    <legend>3. Lingkungan, Sosial, dan Ekonomi</legend>
-                    <textarea id="aspekLingkungan" rows="4" required placeholder="Diisi Penjelasan singkat sesuai dengan penjelasan pada kajian aspek Sosial dan Ekonomi menunjukkan bahwa e.g.: Jumlah tenaga kerja yang dilibatkan Kontribusi terhadap GDP Dampak Lingkungan" aria-label="Aspek Lingkungan"></textarea>
-                    <p class="validation-message" id="aspekLingkunganValidationMessage"></p>
-                </fieldset>
+            <form id="memo-form" class="space-y-6">
+                <div>
+                    <label for="proposer-name" class="form-label">Nama Pengusul:</label>
+                    <input type="text" id="proposer-name" class="form-input" placeholder="Misal: PT. Anak Perusahaan A" required>
+                </div>
 
-                <fieldset>
-                    <legend>4. Fiskal</legend>
-                    <textarea id="aspekFiskal" rows="4" required placeholder="Diisi Penjelasan singkat sesuai dengan penjelasan pada kajian aspek Fiskal menunjukkan bahwa e.g.: Kontribusi Pajak Pemerintah Pusat/Daerah Nilai kontribusi perusahaan sebagai agent of development ( kontribusi pajak dan PNBP sebesar Rp xxx,- , kontribusi Dividen sebesar Rp xxx,- dll) Besaran Insentif Pajak" aria-label="Aspek Fiskal"></textarea>
-                    <p class="validation-message" id="aspekFiskalValidationMessage"></p>
-                </fieldset>
+                <!-- Aspek Finansial / Bisnis (dari CSV) -->
+                <div>
+                    <label for="financial-csv" class="form-label">Aspek Finansial / Bisnis (Unggah File CSV):</label>
+                    <input type="file" id="financial-csv" accept=".csv" class="form-input p-2" required>
+                    <div id="financial-data-preview" class="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 hidden">
+                        <p class="font-semibold mb-1">Data Finansial Terunggah:</p>
+                        <pre id="financial-data-content" class="whitespace-pre-wrap"></pre>
+                    </div>
+                </div>
 
-                <fieldset>
-                    <legend>5. Pelayanan dan Operasional</legend>
-                    <textarea id="aspekPelayanan" rows="4" required placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran e.g.: Menjaga skor CSI dengan target sebesar … Downtime Operation (Serviceability Percentage) Length of Stay Meminimalisasi Complain Resolution Rate Peningkatan Jumlah Pengguna Jasa (Penumpang/Wisatawan/Visitor) Peningkatan Occupancy Rate Pemenuhan 3S (Safety, Security, dan Services) Pemenuhan K3 (Kesehatan dan Keselamatan Kerja)" aria-label="Aspek Pelayanan"></textarea>
-                    <p class="validation-message" id="aspekPelayananValidationMessage"></p>
-                </fieldset>
+                <!-- Aspek Kajian Lainnya (Manual Input) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="kepentingan-objektivitas" class="form-label">2. Kepentingan / Objektivitas / Tujuan:</label>
+                        <textarea id="kepentingan-objektivitas" class="form-textarea" rows="3" placeholder="Penjelasan singkat sesuai dengan kajian aspek Kepentingan/Objektivitas/Tujuan..." required></textarea>
+                    </div>
+                    <div>
+                        <label for="lingkungan-sosial-ekonomi" class="form-label">3. Lingkungan, Sosial, dan Ekonomi:</label>
+                        <textarea id="lingkungan-sosial-ekonomi" class="form-textarea" rows="3" placeholder="Penjelasan singkat sesuai dengan kajian aspek Sosial dan Ekonomi..." required></textarea>
+                    </div>
+                    <div>
+                        <label for="fiskal" class="form-label">4. Fiskal:</label>
+                        <textarea id="fiskal" class="form-textarea" rows="3" placeholder="Penjelasan singkat sesuai dengan kajian aspek Fiskal..." required></textarea>
+                    </div>
+                    <div>
+                        <label for="pelayanan-operasional" class="form-label">5. Pelayanan dan Operasional:</label>
+                        <textarea id="pelayanan-operasional" class="form-textarea" rows="3" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
+                    </div>
+                    <div>
+                        <label for="legal" class="form-label">6. Legal:</label>
+                        <textarea id="legal" class="form-textarea" rows="3" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
+                    </div>
+                    <div>
+                        <label for="manajemen-risiko" class="form-label">7. Manajemen Risiko:</label>
+                        <textarea id="manajemen-risiko" class="form-textarea" rows="3" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
+                    </div>
+                    <div>
+                        <label for="corporate-governance" class="form-label">8. Corporate Governance & Compliance:</label>
+                        <textarea id="corporate-governance" class="form-textarea" rows="3" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
+                    </div>
+                    <div>
+                        <label for="aspek-lainnya" class="form-label">9. Aspek Lainnya:</label>
+                        <textarea id="aspek-lainnya" class="form-textarea" rows="3" placeholder="Dapat diusulkan parameter terkait aspek lainnya oleh Unit Terkait lainnya..." required></textarea>
+                    </div>
+                </div>
 
-                <fieldset>
-                    <legend>6. Legal</legend>
-                    <textarea id="aspekLegal" rows="4" required placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran e.g.: Analisa Hukum terkait Ketentuan Undang Undang Perseroan Terbatas, BUMN dan Ketentuan Internal Governance di Perusahaan (memuat analisa kewenangan Direksi member membuat keputusan untuk mengajukan usulan rencana) Analisa Hukum terkait Hubungan Hukum dengan Pihak Ketiga (jika ada) Analisa Pelaksanaan Fiduciary Duty Direksi Perusahaan (memuat analisa pelaksanaan FD atas pengajuan usulan rencana) Analisa Hukum terkait Lainnya (jika ada) Analisa Risiko Hukum dan Mitigasi (memuat risiko hukum dari semua analisa di atas, berikut dengan rekomendasi mitigasi)" aria-label="Aspek Legal"></textarea>
-                    <p class="validation-message" id="aspekLegalValidationMessage"></p>
-                </fieldset>
-
-                <fieldset>
-                    <legend>7. Manajemen Risiko</legend>
-                    <textarea id="aspekManajemenRisiko" rows="4" required placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran e.g.: Nilai Eksposur Risiko Biaya MItigasi Risiko" aria-label="Aspek Manajemen Risiko"></textarea>
-                    <p class="validation-message" id="aspekManajemenRisikoValidationMessage"></p>
-                </fieldset>
-
-                <fieldset>
-                    <legend>8. Corporate Governance & Compliance</legend>
-                    <textarea id="aspekCG" rows="4" required placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran e.g.: Penjelasan singkat terkait tingkat kepatuhan terhadap dokumen kelengkapan investasi/aksi korporasi dari Pengusul Penjelasan singkat terkait tingkat kepatuhan internal" aria-label="Aspek Corporate Governance & Compliance"></textarea>
-                    <p class="validation-message" id="aspekCGValidationMessage"></p>
-                </fieldset>
-
-                <fieldset>
-                    <legend>9. Aspek Lainnya</legend>
-                    <textarea id="aspekLainnya" rows="4" placeholder="Dapat diusulkan parameter terkait aspek lainnya oleh Unit Terkait lainnya, e.g.: Meng-counter Sentimen Pemberitaan Pemenuhan SLA untuk IT Maturity SDM" aria-label="Aspek Lainnya"></textarea>
-                </fieldset>
-
-                <button type="submit" id="submitNota">Ajukan Nota</button>
+                <button type="submit" class="btn-primary w-full mt-6">Buat Nota Analisa Investasi</button>
             </form>
-        </section>
 
-        <section id="reviewerView" class="view">
-            <h2>Daftar Nota untuk Ditinjau</h2>
-            <div id="notaList">
-                <p>Tidak ada nota untuk ditinjau.</p>
+            <div id="generated-memo-preview" class="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200 hidden">
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">Pratinjau Nota Analisa Investasi</h3>
+                <div id="memo-content" class="prose max-w-none text-gray-700">
+                    <!-- Memo content will be rendered here -->
+                </div>
+                <h4 class="text-lg font-semibold mt-6 mb-2">Visualisasi Data Finansial:</h4>
+                <div class="relative h-64 w-full">
+                    <canvas id="proposerFinancialChart"></canvas>
+                </div>
             </div>
-        </section>
-    </main>
+        </div>
 
-    <div id="notificationArea" class="notification-area"></div>
+        <!-- Bagian Peninjau -->
+        <div id="reviewer-view" class="p-6 bg-white rounded-xl shadow-lg hidden">
+            <h2 class="section-title">Daftar Nota untuk Ditinjau</h2>
+            <div id="reviewer-message-box" class="alert hidden"></div>
 
-    <script src="script.js"></script>
+            <div id="memo-list" class="space-y-4">
+                <!-- Daftar memo akan dimuat di sini -->
+                <p class="text-gray-500 text-center" id="no-memo-message">Belum ada nota yang diajukan untuk ditinjau.</p>
+            </div>
+
+            <!-- Detail Memo Peninjau -->
+            <div id="reviewer-memo-detail" class="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200 hidden">
+                <button id="back-to-list-btn" class="btn-secondary mb-4">← Kembali ke Daftar Nota</button>
+                <h3 class="text-xl font-semibold mb-4 text-gray-800">Detail Nota Analisa Investasi</h3>
+                <div id="current-memo-display" class="prose max-w-none text-gray-700 mb-6">
+                    <!-- Detail memo akan dimuat di sini -->
+                </div>
+                <h4 class="text-lg font-semibold mt-6 mb-2">Visualisasi Data Finansial:</h4>
+                <div class="relative h-64 w-full">
+                    <canvas id="reviewerFinancialChart"></canvas>
+                </div>
+
+                <div class="space-y-4 mt-6">
+                    <div>
+                        <label for="reviewer-comment" class="form-label">Komentar Peninjau:</label>
+                        <textarea id="reviewer-comment" class="form-textarea" rows="4" placeholder="Tambahkan komentar Anda di sini..."></textarea>
+                    </div>
+                    <div class="flex gap-4">
+                        <button id="submit-comment-btn" class="btn-primary flex-1">Kirim Komentar</button>
+                        <button id="approve-memo-btn" class="btn-success flex-1 bg-green-500 hover:bg-green-600">Setujui</button>
+                        <button id="reject-memo-btn" class="btn-danger flex-1">Tolak</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Modal for Alerts/Confirmations -->
+    <div id="custom-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title" class="text-xl font-semibold mb-4 text-gray-800"></h3>
+            <p id="modal-message" class="text-gray-700 mb-6"></p>
+            <div id="modal-buttons" class="modal-buttons">
+                <!-- Buttons will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state for memos
+        let memos = JSON.parse(localStorage.getItem('investmentMemos')) || [];
+        let currentFinancialData = null;
+        let currentMemoId = null; // To keep track of the memo being reviewed
+        let proposerChartInstance = null; // To store Chart.js instance for proposer view
+        let reviewerChartInstance = null; // To store Chart.js instance for reviewer view
+
+        // DOM Elements
+        const proposerView = document.getElementById('proposer-view');
+        const reviewerView = document.getElementById('reviewer-view');
+        const viewSwitcher = document.getElementById('view-switcher'); // The new slider checkbox
+        const memoForm = document.getElementById('memo-form');
+        const financialCsvInput = document.getElementById('financial-csv');
+        const financialDataPreview = document.getElementById('financial-data-preview');
+        const financialDataContent = document.getElementById('financial-data-content');
+        const generatedMemoPreview = document.getElementById('generated-memo-preview');
+        const memoContentDiv = document.getElementById('memo-content');
+        const memoListDiv = document.getElementById('memo-list');
+        const reviewerMemoDetailDiv = document.getElementById('reviewer-memo-detail');
+        const backToListBtn = document.getElementById('back-to-list-btn');
+        const currentMemoDisplay = document.getElementById('current-memo-display');
+        const reviewerCommentInput = document.getElementById('reviewer-comment');
+        const submitCommentBtn = document.getElementById('submit-comment-btn');
+        const approveMemoBtn = document.getElementById('approve-memo-btn');
+        const rejectMemoBtn = document.getElementById('reject-memo-btn');
+        const noMemoMessage = document.getElementById('no-memo-message');
+
+        const proposerMessageBox = document.getElementById('proposer-message-box');
+        const reviewerMessageBox = document.getElementById('reviewer-message-box');
+
+        // Modal Elements
+        const customModal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalButtons = document.getElementById('modal-buttons');
+
+        // --- Utility Functions ---
+
+        function showModal(title, message, buttons) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalButtons.innerHTML = ''; // Clear previous buttons
+
+            buttons.forEach(button => {
+                const btn = document.createElement('button');
+                btn.textContent = button.text;
+                btn.className = `btn-primary ${button.className || ''}`;
+                btn.onclick = () => {
+                    hideModal();
+                    if (button.handler) button.handler();
+                };
+                modalButtons.appendChild(btn);
+            });
+            customModal.classList.add('show');
+        }
+
+        function hideModal() {
+            customModal.classList.remove('show');
+        }
+
+        function displayMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `alert ${type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-warning'}`;
+            element.classList.remove('hidden');
+            setTimeout(() => {
+                element.classList.add('hidden');
+            }, 5000);
+        }
+
+        function saveMemos() {
+            localStorage.setItem('investmentMemos', JSON.stringify(memos));
+        }
+
+        function generateUniqueId() {
+            return 'memo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        }
+
+        // Function to parse CSV data
+        function parseCSV(text) {
+            const lines = text.split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) return {};
+
+            const result = {};
+            lines.forEach(line => {
+                const parts = line.split(',');
+                if (parts.length >= 2) {
+                    const key = parts[0].trim();
+                    const value = parts.slice(1).join(',').trim(); // Join remaining parts for value
+                    result[key] = value;
+                }
+            });
+            return result;
+        }
+
+        // Function to format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return new Date(dateString).toLocaleDateString('id-ID', options);
+        }
+
+        // --- Charting Functionality ---
+        function renderFinancialChart(canvasId, financialData, chartInstance) {
+            const ctx = document.getElementById(canvasId);
+
+            // Destroy existing chart instance if it exists
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            // Extract relevant financial metrics for the chart
+            const labels = [];
+            const data = [];
+            const backgroundColors = [];
+            const borderColors = [];
+
+            const metricsToChart = {
+                'EBITDA Margin': 'rgba(75, 192, 192, 0.6)',
+                'Net Profit Margin': 'rgba(153, 102, 255, 0.6)',
+                'ROE': 'rgba(255, 159, 64, 0.6)',
+                'ROA': 'rgba(54, 162, 235, 0.6)',
+                'Current Ratio': 'rgba(255, 99, 132, 0.6)',
+                'Liquidity Buffer': 'rgba(201, 203, 207, 0.6)',
+                'IBD to Invested Capital': 'rgba(255, 205, 86, 0.6)',
+                'DSCR': 'rgba(75, 192, 192, 0.6)',
+                'NPV': 'rgba(54, 162, 235, 0.6)',
+                'IRR': 'rgba(153, 102, 255, 0.6)'
+            };
+
+            for (const metric in metricsToChart) {
+                if (financialData[metric]) {
+                    // Try to parse number, handling commas and percentage signs
+                    let value = financialData[metric].replace(/,/g, ''); // Remove commas
+                    if (value.endsWith('%')) {
+                        value = parseFloat(value) / 100; // Convert percentage to decimal
+                    } else {
+                        value = parseFloat(value);
+                    }
+
+                    if (!isNaN(value)) {
+                        labels.push(metric);
+                        data.push(value);
+                        backgroundColors.push(metricsToChart[metric]);
+                        borderColors.push(metricsToChart[metric].replace('0.6', '1')); // Opaque border
+                    }
+                }
+            }
+
+            if (labels.length === 0) {
+                ctx.style.display = 'none'; // Hide canvas if no data
+                return null;
+            } else {
+                ctx.style.display = 'block';
+            }
+
+            const newChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Nilai Metrik Finansial',
+                        data: data,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Nilai'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Ringkasan Metrik Finansial Utama'
+                        }
+                    }
+                }
+            });
+            return newChartInstance;
+        }
+
+
+        // --- Proposer View Logic ---
+
+        financialCsvInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (!file) {
+                currentFinancialData = null;
+                financialDataPreview.classList.add('hidden');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const csvText = e.target.result;
+                    currentFinancialData = parseCSV(csvText);
+                    financialDataContent.textContent = JSON.stringify(currentFinancialData, null, 2);
+                    financialDataPreview.classList.remove('hidden');
+                    displayMessage(proposerMessageBox, 'File CSV berhasil diunggah dan diproses.', 'success');
+                } catch (error) {
+                    displayMessage(proposerMessageBox, 'Gagal memproses file CSV: ' + error.message, 'error');
+                    currentFinancialData = null;
+                    financialDataPreview.classList.add('hidden');
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        memoForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            // Validate all fields are filled
+            const formInputs = memoForm.querySelectorAll('.form-input, .form-textarea');
+            let allFieldsFilled = true;
+            formInputs.forEach(input => {
+                if (!input.value.trim()) {
+                    allFieldsFilled = false;
+                    input.classList.add('border-red-500'); // Highlight empty fields
+                } else {
+                    input.classList.remove('border-red-500');
+                }
+            });
+
+            if (!currentFinancialData) {
+                allFieldsFilled = false;
+                financialCsvInput.classList.add('border-red-500');
+                displayMessage(proposerMessageBox, 'Harap unggah file CSV finansial.', 'error');
+            } else {
+                financialCsvInput.classList.remove('border-red-500');
+            }
+
+            if (!allFieldsFilled) {
+                displayMessage(proposerMessageBox, 'Harap lengkapi semua bidang yang wajib diisi.', 'error');
+                return;
+            }
+
+            const proposerName = document.getElementById('proposer-name').value;
+            const submissionDate = new Date();
+            const reviewDeadline = new Date(submissionDate);
+            reviewDeadline.setDate(submissionDate.getDate() + 3); // 3 days for warning
+            const autoSendDate = new Date(submissionDate);
+            autoSendDate.setDate(submissionDate.getDate() + 5); // 5 days for auto-send
+
+            const newMemo = {
+                id: generateUniqueId(),
+                proposerName: proposerName,
+                submissionDate: submissionDate.toISOString(),
+                status: 'pending', // 'pending', 'approved', 'rejected'
+                financialData: currentFinancialData,
+                aspects: {
+                    kepentingan: document.getElementById('kepentingan-objektivitas').value,
+                    lingkungan: document.getElementById('lingkungan-sosial-ekonomi').value,
+                    fiskal: document.getElementById('fiskal').value,
+                    pelayanan: document.getElementById('pelayanan-operasional').value,
+                    legal: document.getElementById('legal').value,
+                    manajemenRisiko: document.getElementById('manajemen-risiko').value,
+                    corporateGovernance: document.getElementById('corporate-governance').value,
+                    aspekLainnya: document.getElementById('aspek-lainnya').value
+                },
+                reviewerComments: [], // Can be extended to include multiple reviewers
+                reviewDeadline: reviewDeadline.toISOString(),
+                autoSendDate: autoSendDate.toISOString(),
+                lastReviewCheck: submissionDate.toISOString() // To track when last checked for warnings/auto-send
+            };
+
+            memos.push(newMemo);
+            saveMemos();
+            renderMemoPreview(newMemo);
+            displayMessage(proposerMessageBox, 'Nota Analisa Investasi berhasil dibuat dan diajukan!', 'success');
+            memoForm.reset(); // Clear form
+            currentFinancialData = null;
+            financialDataPreview.classList.add('hidden');
+        });
+
+        function renderMemoPreview(memo) {
+            let financialHtml = '<ul>';
+            for (const key in memo.financialData) {
+                financialHtml += `<li><strong>${key}:</strong> ${memo.financialData[key]}</li>`;
+            }
+            financialHtml += '</ul>';
+
+            memoContentDiv.innerHTML = `
+                <p><strong>Nama Pengusul:</strong> ${memo.proposerName}</p>
+                <p><strong>Tanggal Pengajuan:</strong> ${formatDate(memo.submissionDate)}</p>
+                <p><strong>Status:</strong> <span class="font-semibold text-blue-600">${memo.status.toUpperCase()}</span></p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">1. Finansial / Bisnis:</h4>
+                ${financialHtml}
+                <h4 class="text-lg font-semibold mt-4 mb-2">2. Kepentingan / Objektivitas / Tujuan:</h4>
+                <p>${memo.aspects.kepentingan}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">3. Lingkungan, Sosial, dan Ekonomi:</h4>
+                <p>${memo.aspects.lingkungan}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">4. Fiskal:</h4>
+                <p>${memo.aspects.fiskal}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">5. Pelayanan dan Operasional:</h4>
+                <p>${memo.aspects.pelayanan}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">6. Legal:</h4>
+                <p>${memo.aspects.legal}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">7. Manajemen Risiko:</h4>
+                <p>${memo.aspects.manajemenRisiko}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">8. Corporate Governance & Compliance:</h4>
+                <p>${memo.aspects.corporateGovernance}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">9. Aspek Lainnya:</h4>
+                <p>${memo.aspects.aspekLainnya}</p>
+            `;
+            generatedMemoPreview.classList.remove('hidden');
+
+            // Render chart for proposer view
+            proposerChartInstance = renderFinancialChart('proposerFinancialChart', memo.financialData, proposerChartInstance);
+        }
+
+        // --- Reviewer View Logic ---
+
+        function renderReviewerList() {
+            memoListDiv.innerHTML = ''; // Clear existing list
+            reviewerMemoDetailDiv.classList.add('hidden'); // Hide detail view when showing list
+
+            if (memos.length === 0) {
+                noMemoMessage.classList.remove('hidden');
+                return;
+            } else {
+                noMemoMessage.classList.add('hidden');
+            }
+
+            memos.forEach(memo => {
+                const memoCard = document.createElement('div');
+                memoCard.className = `p-4 border rounded-lg shadow-sm cursor-pointer transition-all duration-200 ease-in-out ${memo.status === 'approved' ? 'bg-green-50 border-green-200' : memo.status === 'rejected' ? 'bg-red-50 border-red-200' : 'bg-blue-50 border-blue-200 hover:bg-blue-100'}`;
+
+                // Check for review deadlines
+                const now = new Date();
+                const reviewDeadline = new Date(memo.reviewDeadline);
+                const autoSendDate = new Date(memo.autoSendDate);
+                let statusText = `<span class="font-semibold text-blue-600">${memo.status.toUpperCase()}</span>`;
+                let warningClass = '';
+
+                if (memo.status === 'pending') {
+                    if (now > autoSendDate) {
+                        statusText = `<span class="font-semibold text-red-600">OTOMATIS DIKIRIM (Belum Ditinjau)</span>`;
+                        warningClass = 'border-red-500 ring-2 ring-red-300'; // Highlight strongly
+                        // Simulate sending notification to proposer
+                        if (!memo.autoSent) { // Prevent multiple auto-sends
+                            displayMessage(reviewerMessageBox, `Nota "${memo.proposerName}" (ID: ${memo.id.substring(0, 8)}) otomatis dikirim kembali ke pengusul karena belum ditinjau setelah 5 hari.`, 'warning');
+                            memo.autoSent = true; // Mark as auto-sent
+                            saveMemos();
+                        }
+                    } else if (now > reviewDeadline) {
+                        statusText = `<span class="font-semibold text-orange-600">PERINGATAN (Lewat 3 Hari)</span>`;
+                        warningClass = 'border-orange-500 ring-2 ring-orange-200'; // Highlight
+                    }
+                } else if (memo.status === 'approved') {
+                    statusText = `<span class="font-semibold text-green-600">DISETUJUI</span>`;
+                } else if (memo.status === 'rejected') {
+                    statusText = `<span class="font-semibold text-red-600">DITOLAK</span>`;
+                }
+
+
+                memoCard.innerHTML = `
+                    <h4 class="text-lg font-semibold text-gray-800">${memo.proposerName}</h4>
+                    <p class="text-sm text-gray-600">Diajukan: ${formatDate(memo.submissionDate)}</p>
+                    <p class="text-sm text-gray-600">ID Nota: ${memo.id}</p>
+                    <p class="text-sm text-gray-600">Status: ${statusText}</p>
+                `;
+                memoCard.classList.add(warningClass);
+                memoCard.addEventListener('click', () => viewMemoDetails(memo.id));
+                memoListDiv.appendChild(memoCard);
+            });
+        }
+
+        function viewMemoDetails(memoId) {
+            currentMemoId = memoId;
+            const memo = memos.find(m => m.id === memoId);
+            if (!memo) {
+                displayMessage(reviewerMessageBox, 'Nota tidak ditemukan.', 'error');
+                return;
+            }
+
+            let financialHtml = '<ul>';
+            for (const key in memo.financialData) {
+                financialHtml += `<li><strong>${key}:</strong> ${memo.financialData[key]}</li>`;
+            }
+            financialHtml += '</ul>';
+
+            let commentsHtml = '';
+            if (memo.reviewerComments.length > 0) {
+                commentsHtml = '<h4 class="text-lg font-semibold mt-6 mb-2">Komentar Peninjau:</h4>';
+                memo.reviewerComments.forEach(comment => {
+                    commentsHtml += `
+                        <div class="bg-gray-100 p-3 rounded-md mb-2">
+                            <p class="text-sm font-semibold">${comment.reviewerId} pada ${formatDate(comment.date)}:</p>
+                            <p class="text-gray-700">${comment.comment}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                commentsHtml = '<p class="text-gray-500 mt-4">Belum ada komentar.</p>';
+            }
+
+            currentMemoDisplay.innerHTML = `
+                <p><strong>Nama Pengusul:</strong> ${memo.proposerName}</p>
+                <p><strong>Tanggal Pengajuan:</strong> ${formatDate(memo.submissionDate)}</p>
+                <p><strong>Status:</strong> <span class="font-semibold text-blue-600">${memo.status.toUpperCase()}</span></p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">1. Finansial / Bisnis:</h4>
+                ${financialHtml}
+                <h4 class="text-lg font-semibold mt-4 mb-2">2. Kepentingan / Objektivitas / Tujuan:</h4>
+                <p>${memo.aspects.kepentingan}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">3. Lingkungan, Sosial, dan Ekonomi:</h4>
+                <p>${memo.aspects.lingkungan}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">4. Fiskal:</h4>
+                <p>${memo.aspects.fiskal}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">5. Pelayanan dan Operasional:</h4>
+                <p>${memo.aspects.pelayanan}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">6. Legal:</h4>
+                <p>${memo.aspects.legal}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">7. Manajemen Risiko:</h4>
+                <p>${memo.aspects.manajemenRisiko}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">8. Corporate Governance & Compliance:</h4>
+                <p>${memo.aspects.corporateGovernance}</p>
+                <h4 class="text-lg font-semibold mt-4 mb-2">9. Aspek Lainnya:</h4>
+                <p>${memo.aspects.aspekLainnya}</p>
+                ${commentsHtml}
+            `;
+
+            reviewerMemoDetailDiv.classList.remove('hidden');
+            // Render chart for reviewer view
+            reviewerChartInstance = renderFinancialChart('reviewerFinancialChart', memo.financialData, reviewerChartInstance);
+        }
+
+        submitCommentBtn.addEventListener('click', () => {
+            const commentText = reviewerCommentInput.value.trim();
+            if (!commentText) {
+                displayMessage(reviewerMessageBox, 'Komentar tidak boleh kosong.', 'warning');
+                return;
+            }
+
+            const memoIndex = memos.findIndex(m => m.id === currentMemoId);
+            if (memoIndex > -1) {
+                // For simplicity, using a generic reviewer ID. In a real app, this would be authenticated user ID.
+                const reviewerId = 'Peninjau_1';
+                memos[memoIndex].reviewerComments.push({
+                    reviewerId: reviewerId,
+                    comment: commentText,
+                    date: new Date().toISOString()
+                });
+                saveMemos();
+                displayMessage(reviewerMessageBox, 'Komentar berhasil ditambahkan.', 'success');
+                reviewerCommentInput.value = ''; // Clear comment field
+                viewMemoDetails(currentMemoId); // Re-render details to show new comment
+            }
+        });
+
+        approveMemoBtn.addEventListener('click', () => {
+            showModal('Konfirmasi Persetujuan', 'Apakah Anda yakin ingin menyetujui nota ini?', [
+                { text: 'Ya, Setujui', className: 'bg-green-500 hover:bg-green-600', handler: () => updateMemoStatus('approved') },
+                { text: 'Batal', className: 'btn-secondary' }
+            ]);
+        });
+
+        rejectMemoBtn.addEventListener('click', () => {
+            showModal('Konfirmasi Penolakan', 'Apakah Anda yakin ingin menolak nota ini?', [
+                { text: 'Ya, Tolak', className: 'btn-danger', handler: () => updateMemoStatus('rejected') },
+                { text: 'Batal', className: 'btn-secondary' }
+            ]);
+        });
+
+        function updateMemoStatus(status) {
+            const memoIndex = memos.findIndex(m => m.id === currentMemoId);
+            if (memoIndex > -1) {
+                memos[memoIndex].status = status;
+                saveMemos();
+                displayMessage(reviewerMessageBox, `Nota berhasil ${status === 'approved' ? 'disetujui' : 'ditolak'}.`, 'success');
+                renderReviewerList(); // Go back to list and refresh
+                reviewerMemoDetailDiv.classList.add('hidden');
+            }
+        }
+
+        backToListBtn.addEventListener('click', () => {
+            renderReviewerList();
+            reviewerMemoDetailDiv.classList.add('hidden');
+        });
+
+        // --- View Switching Logic ---
+
+        function showView(viewName) {
+            proposerView.classList.add('hidden');
+            reviewerView.classList.add('hidden');
+
+            // Disable/enable form fields based on view
+            const formInputs = memoForm.querySelectorAll('input, textarea, button[type="submit"]');
+            if (viewName === 'proposer') {
+                proposerView.classList.remove('hidden');
+                formInputs.forEach(input => input.removeAttribute('disabled'));
+            } else if (viewName === 'reviewer') {
+                reviewerView.classList.remove('hidden');
+                formInputs.forEach(input => input.setAttribute('disabled', 'true'));
+                renderReviewerList(); // Refresh reviewer list when entering view
+            }
+        }
+
+        // Event listener for the slider
+        viewSwitcher.addEventListener('change', (event) => {
+            if (event.target.checked) {
+                // Checked means Reviewer
+                showView('reviewer');
+            } else {
+                // Unchecked means Proposer
+                showView('proposer');
+            }
+        });
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial state of the slider and view
+            viewSwitcher.checked = false; // Default to Proposer
+            showView('proposer');
+
+            // Periodically check for review deadlines (simplified for client-side app)
+            setInterval(renderReviewerList, 60 * 1000); // Check every minute
+        });
+    </script>
 </body>
 </html>
