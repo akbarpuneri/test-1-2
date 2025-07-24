@@ -6,281 +6,260 @@
     <title>Nota Analisa Investasi</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Inter Font (similar to Injourney's clean sans-serif) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Chart.js CDN for interactive graphs -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        /* Base styles inspired by career.injourney.id */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #e2e8f0; /* Lighter blue-gray background */
+            background-color: #f8f8f8; /* Light background, almost white */
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Align to top */
-            min-height: 100vh; /* Ensure it takes full viewport height */
-            padding: 2rem 0; /* Add vertical padding */
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem 0;
+            color: #333; /* Darker text for readability */
         }
         .container {
-            max-width: 1200px;
-            width: 95%; /* Make it slightly wider on smaller screens */
+            max-width: 1100px; /* Slightly narrower for a more focused feel */
+            width: 95%;
             margin: 0 auto;
-            padding: 2.5rem; /* Increased padding */
+            padding: 3rem; /* More generous padding */
             background-color: #ffffff;
-            border-radius: 1.5rem; /* More rounded corners */
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Stronger shadow */
-            border: 1px solid #cbd5e1; /* Subtle border */
+            border-radius: 1.25rem; /* Rounded corners */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Softer, deeper shadow */
+            border: none; /* No explicit border, rely on shadow */
         }
         .section-title {
-            font-size: 1.75rem; /* Larger title */
+            font-size: 2rem; /* Larger, more prominent */
             font-weight: 700; /* Bolder */
-            color: #1a202c; /* Darker text */
-            margin-bottom: 2rem; /* More space */
-            border-bottom: 3px solid #3b82f6; /* Thicker, colored border */
-            padding-bottom: 0.75rem;
+            color: #1a202c; /* Dark text */
+            margin-bottom: 2.5rem; /* More space below title */
+            border-bottom: 4px solid #0056b3; /* Stronger blue underline */
+            padding-bottom: 1rem;
             text-align: center;
+            letter-spacing: -0.025em; /* Slight letter spacing for headings */
         }
         .form-label {
             display: block;
-            font-weight: 600; /* Bolder label */
-            color: #2d3748; /* Darker text */
-            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: #4a5568; /* Slightly softer dark gray */
+            margin-bottom: 0.75rem; /* More space */
+            font-size: 0.95rem;
         }
         .form-input, .form-textarea {
             width: 100%;
-            padding: 0.9rem; /* Increased padding */
-            border: 1px solid #a0aec0; /* Darker border */
-            border-radius: 0.75rem; /* More rounded */
-            font-size: 1.05rem; /* Slightly larger font */
+            padding: 1rem; /* More padding */
+            border: 1px solid #e2e8f0; /* Light gray border */
+            border-radius: 0.75rem;
+            font-size: 1rem;
             color: #2d3748;
-            background-color: #f8fafc; /* Off-white background */
-            transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out;
+            background-color: #ffffff;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-input:focus, .form-textarea:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3); /* More prominent focus shadow */
-            background-color: #ffffff;
+            border-color: #007bff; /* Brighter blue on focus */
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Subtle blue glow */
         }
         .btn-base {
-            padding: 0.9rem 2rem;
+            padding: 1rem 2.25rem; /* More padding */
             border-radius: 0.75rem;
-            font-weight: 700; /* Bolder */
-            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            font-weight: 700;
+            transition: all 0.2s ease-in-out; /* Smooth all transitions */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
         }
         .btn-primary {
-            @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white;
+            background: linear-gradient(to right, #007bff, #0056b3); /* Blue gradient */
+            color: white;
         }
         .btn-primary:hover {
-            @apply from-blue-600 to-blue-700 transform -translate-y-0.5 shadow-lg;
+            background: linear-gradient(to right, #0056b3, #004085);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         .btn-secondary {
-            @apply bg-gray-500 text-white;
+            background-color: #6c757d; /* Gray */
+            color: white;
         }
         .btn-secondary:hover {
-            @apply bg-gray-600 transform -translate-y-0.5 shadow-lg;
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         .btn-success {
-            @apply bg-gradient-to-r from-green-500 to-green-600 text-white;
+            background: linear-gradient(to right, #28a745, #218838); /* Green gradient */
+            color: white;
         }
         .btn-success:hover {
-            @apply from-green-600 to-green-700 transform -translate-y-0.5 shadow-lg;
+            background: linear-gradient(to right, #218838, #1e7e34);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         .btn-danger {
-            @apply bg-gradient-to-r from-red-500 to-red-600 text-white;
+            background: linear-gradient(to right, #dc3545, #c82333); /* Red gradient */
+            color: white;
         }
         .btn-danger:hover {
-            @apply from-red-600 to-red-700 transform -translate-y-0.5 shadow-lg;
+            background: linear-gradient(to right, #c82333, #bd2130);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
         .alert {
-            padding: 1rem;
-            border-radius: 0.75rem; /* More rounded */
-            margin-bottom: 1.5rem; /* More space */
+            padding: 1.25rem; /* More padding */
+            border-radius: 0.75rem;
+            margin-bottom: 2rem; /* More space */
             font-weight: 500;
-            border: 1px solid; /* Add border for better visual separation */
+            border: 1px solid;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow for alerts */
         }
         .alert-success {
-            background-color: #d1fae5;
-            color: #065f46;
-            border-color: #34d399;
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
         }
         .alert-error {
-            background-color: #fee2e2;
-            color: #991b1b;
-            border-color: #ef4444;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
         }
         .alert-warning {
-            background-color: #fffbeb;
-            color: #92400e;
-            border-color: #fbbf24;
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeeba;
         }
         .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); /* Darker overlay */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-        }
-        .modal.show {
-            opacity: 1;
-            visibility: visible;
+            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
         }
         .modal-content {
-            background-color: white;
-            padding: 2.5rem; /* More padding */
-            border-radius: 1.5rem; /* More rounded */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Stronger shadow */
-            max-width: 550px; /* Slightly wider */
-            width: 90%;
-            text-align: center;
-            transform: translateY(-20px); /* Slight animation on show */
-            transition: transform 0.3s ease-in-out;
-        }
-        .modal.show .modal-content {
-            transform: translateY(0);
+            padding: 3rem; /* More padding */
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); /* Stronger, deeper shadow */
         }
         .modal-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1.25rem; /* More space between buttons */
-            margin-top: 2rem;
+            gap: 1.5rem; /* More space */
         }
 
-        /* Slider styles */
+        /* Slider styles (adjusted for better vertical alignment and theme) */
         .switch-toggle {
-            position: relative;
-            display: inline-block;
-            width: 240px; /* Increased width for better text display */
-            height: 48px; /* Increased height */
-            background-color: #cbd5e1; /* Light gray for background */
-            border-radius: 24px; /* Half of height for pill shape */
-            cursor: pointer;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15); /* Inner shadow */
-            transition: background-color 0.3s ease;
+            width: 260px; /* Wider for better text spacing */
+            height: 52px; /* Taller */
+            background-color: #e9ecef; /* Lighter gray background */
+            border-radius: 26px;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1); /* Deeper inner shadow */
         }
-
-        .switch-toggle input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
         .switch-toggle .slider {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 120px; /* Half of the total width */
+            width: 130px; /* Half of new width */
             height: 100%;
-            background-color: #3b82f6; /* Blue for active state */
-            border-radius: 24px;
-            transition: transform 0.3s ease;
-            transform: translateX(0); /* Initial position for proposer */
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Slider thumb shadow */
+            background: linear-gradient(to right, #007bff, #0056b3); /* Blue gradient for slider thumb */
+            border-radius: 26px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25); /* More prominent thumb shadow */
         }
-
         .switch-toggle input:checked + .slider {
-            transform: translateX(120px); /* Move for reviewer */
+            transform: translateX(130px); /* Move for reviewer */
         }
-
         .switch-toggle .labels {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: space-around;
-            align-items: center; /* Vertically center text */
             font-weight: 600;
-            color: #4b5563; /* Gray for inactive text */
-            z-index: 1;
+            color: #6c757d; /* Softer gray for inactive text */
         }
-
         .switch-toggle .labels span {
-            flex: 1;
-            text-align: center;
-            transition: color 0.3s ease;
-            user-select: none; /* Prevent text selection */
-            line-height: 48px; /* Match height for perfect vertical centering */
+            line-height: 52px; /* Match new height for perfect vertical centering */
+            font-size: 1.05rem; /* Slightly larger font */
         }
-
         .switch-toggle input:not(:checked) ~ .labels span:first-child {
-            color: white; /* White for active proposer text */
+            color: white;
         }
-
         .switch-toggle input:checked ~ .labels span:last-child {
-            color: white; /* White for active reviewer text */
+            color: white;
         }
 
-        /* Memo card styles */
+        /* Memo card styles (enhanced) */
         .memo-card {
-            @apply p-5 border rounded-xl shadow-md cursor-pointer transition-all duration-300 ease-in-out;
-            border-left: 8px solid; /* Accent border */
+            padding: 1.5rem; /* More padding */
+            border-radius: 1rem; /* More rounded */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Softer, deeper shadow */
+            border-left: 6px solid; /* Slightly thinner accent border */
+            transition: all 0.2s ease-in-out;
         }
         .memo-card:hover {
-            @apply transform -translate-y-1 scale-[1.01] shadow-lg;
+            transform: translateY(-3px) scale(1.005); /* More noticeable lift */
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12); /* Stronger hover shadow */
         }
         .memo-card.pending {
-            @apply bg-blue-50 border-blue-400;
+            background-color: #e0f7fa; /* Light cyan */
+            border-color: #00bcd4; /* Cyan */
         }
         .memo-card.pending:hover {
-            @apply bg-blue-100;
+            background-color: #b2ebf2;
         }
         .memo-card.approved {
-            @apply bg-green-50 border-green-400;
+            background-color: #e8f5e9; /* Light green */
+            border-color: #4caf50; /* Green */
         }
         .memo-card.approved:hover {
-            @apply bg-green-100;
+            background-color: #c8e6c9;
         }
         .memo-card.rejected {
-            @apply bg-red-50 border-red-400;
+            background-color: #ffebee; /* Light red */
+            border-color: #f44336; /* Red */
         }
         .memo-card.rejected:hover {
-            @apply bg-red-100;
+            background-color: #ffcdd2;
         }
         .memo-card.warning {
-            @apply border-orange-500 ring-2 ring-orange-300;
+            border-color: #ff9800; /* Orange */
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.08); /* Orange ring */
         }
         .memo-card.auto-sent {
-            @apply border-red-600 ring-2 ring-red-400;
+            border-color: #d32f2f; /* Darker red */
+            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.4), 0 8px 20px rgba(0, 0, 0, 0.08); /* Red ring */
         }
 
         /* Prose styles for memo content */
         .prose h4 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
+            font-size: 1.35rem; /* Slightly larger */
+            font-weight: 700; /* Bolder */
+            margin-top: 1.75rem;
+            margin-bottom: 0.85rem;
             color: #2d3748;
+            border-bottom: 1px dashed #cbd5e1; /* Subtle dashed line */
+            padding-bottom: 0.4rem;
         }
         .prose ul {
             list-style: disc;
-            margin-left: 1.25rem;
+            margin-left: 1.5rem;
             padding-left: 0;
         }
         .prose li {
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.4rem;
+            line-height: 1.6;
         }
         .prose p {
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
         }
         .comment-box {
-            @apply bg-gray-100 p-4 rounded-lg border border-gray-200 shadow-sm;
+            background-color: #f0f4f8; /* Lighter blue-gray */
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* Inner shadow */
+        }
+        .comment-box p {
+            margin-bottom: 0.5rem;
+        }
+        .comment-box p:last-child {
+            margin-bottom: 0;
         }
     </style>
 </head>
 <body>
     <div id="app" class="container">
-        <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">Sistem Nota Analisa Investasi</h1>
+        <h1 class="text-3xl font-bold text-center mb-10 text-gray-800">Sistem Nota Analisa Investasi</h1>
 
-        <div class="flex justify-center gap-4 mb-8">
+        <div class="flex justify-center gap-4 mb-10">
             <label class="switch-toggle">
                 <input type="checkbox" id="view-switcher">
                 <span class="slider"></span>
@@ -292,11 +271,11 @@
         </div>
 
         <!-- Bagian Pengusul -->
-        <div id="proposer-view" class="p-6 bg-white rounded-xl shadow-lg border border-gray-200">
+        <div id="proposer-view" class="p-8 bg-white rounded-xl shadow-lg border border-gray-200">
             <h2 class="section-title">Buat Nota Analisa Investasi</h2>
             <div id="proposer-message-box" class="alert hidden"></div>
 
-            <form id="memo-form" class="space-y-6">
+            <form id="memo-form" class="space-y-8">
                 <div>
                     <label for="proposer-name" class="form-label">Nama Pengusul:</label>
                     <input type="text" id="proposer-name" class="form-input" placeholder="Misal: PT. Anak Perusahaan A" required>
@@ -306,91 +285,91 @@
                 <div>
                     <label for="financial-csv" class="form-label">Aspek Finansial / Bisnis (Unggah File CSV):</label>
                     <input type="file" id="financial-csv" accept=".csv" class="form-input p-2" required>
-                    <div id="financial-data-preview" class="mt-2 p-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 hidden">
-                        <p class="font-semibold mb-1">Data Finansial Terunggah:</p>
-                        <pre id="financial-data-content" class="whitespace-pre-wrap"></pre>
+                    <div id="financial-data-preview" class="mt-3 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 hidden">
+                        <p class="font-semibold mb-2">Data Finansial Terunggah:</p>
+                        <pre id="financial-data-content" class="whitespace-pre-wrap font-mono text-xs"></pre>
                     </div>
                 </div>
 
                 <!-- Aspek Kajian Lainnya (Manual Input) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                         <label for="kepentingan-objektivitas" class="form-label">2. Kepentingan / Objektivitas / Tujuan:</label>
-                        <textarea id="kepentingan-objektivitas" class="form-textarea" rows="3" placeholder="Penjelasan singkat sesuai dengan kajian aspek Kepentingan/Objektivitas/Tujuan..." required></textarea>
+                        <textarea id="kepentingan-objektivitas" class="form-textarea" rows="4" placeholder="Penjelasan singkat sesuai dengan kajian aspek Kepentingan/Objektivitas/Tujuan..." required></textarea>
                     </div>
                     <div>
                         <label for="lingkungan-sosial-ekonomi" class="form-label">3. Lingkungan, Sosial, dan Ekonomi:</label>
-                        <textarea id="lingkungan-sosial-ekonomi" class="form-textarea" rows="3" placeholder="Penjelasan singkat sesuai dengan kajian aspek Sosial dan Ekonomi..." required></textarea>
+                        <textarea id="lingkungan-sosial-ekonomi" class="form-textarea" rows="4" placeholder="Penjelasan singkat sesuai dengan kajian aspek Sosial dan Ekonomi..." required></textarea>
                     </div>
                     <div>
                         <label for="fiskal" class="form-label">4. Fiskal:</label>
-                        <textarea id="fiskal" class="form-textarea" rows="3" placeholder="Penjelasan singkat sesuai dengan kajian aspek Fiskal..." required></textarea>
+                        <textarea id="fiskal" class="form-textarea" rows="4" placeholder="Penjelasan singkat sesuai dengan kajian aspek Fiskal..." required></textarea>
                     </div>
                     <div>
                         <label for="pelayanan-operasional" class="form-label">5. Pelayanan dan Operasional:</label>
-                        <textarea id="pelayanan-operasional" class="form-textarea" rows="3" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
+                        <textarea id="pelayanan-operasional" class="form-textarea" rows="4" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
                     </div>
                     <div>
                         <label for="legal" class="form-label">6. Legal:</label>
-                        <textarea id="legal" class="form-textarea" rows="3" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
+                        <textarea id="legal" class="form-textarea" rows="4" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
                     </div>
                     <div>
                         <label for="manajemen-risiko" class="form-label">7. Manajemen Risiko:</label>
-                        <textarea id="manajemen-risiko" class="form-textarea" rows="3" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
+                        <textarea id="manajemen-risiko" class="form-textarea" rows="4" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
                     </div>
                     <div>
                         <label for="corporate-governance" class="form-label">8. Corporate Governance & Compliance:</label>
-                        <textarea id="corporate-governance" class="form-textarea" rows="3" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
+                        <textarea id="corporate-governance" class="form-textarea" rows="4" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
                     </div>
                     <div>
                         <label for="aspek-lainnya" class="form-label">9. Aspek Lainnya:</label>
-                        <textarea id="aspek-lainnya" class="form-textarea" rows="3" placeholder="Dapat diusulkan parameter terkait aspek lainnya oleh Unit Terkait lainnya..." required></textarea>
+                        <textarea id="aspek-lainnya" class="form-textarea" rows="4" placeholder="Dapat diusulkan parameter terkait aspek lainnya oleh Unit Terkait lainnya..." required></textarea>
                     </div>
                 </div>
 
-                <button type="submit" class="btn-base btn-primary w-full mt-6">Buat Nota Analisa Investasi</button>
+                <button type="submit" class="btn-base btn-primary w-full mt-8">Buat Nota Analisa Investasi</button>
             </form>
 
-            <div id="generated-memo-preview" class="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200 hidden">
-                <h3 class="text-xl font-semibold mb-4 text-gray-800">Pratinjau Nota Analisa Investasi</h3>
+            <div id="generated-memo-preview" class="mt-10 p-8 bg-gray-50 rounded-xl border border-gray-200 hidden">
+                <h3 class="text-xl font-semibold mb-5 text-gray-800">Pratinjau Nota Analisa Investasi</h3>
                 <div id="memo-content" class="prose max-w-none text-gray-700">
                     <!-- Memo content will be rendered here -->
                 </div>
-                <h4 class="text-lg font-semibold mt-6 mb-2">Visualisasi Data Finansial:</h4>
-                <div class="relative h-64 w-full bg-white p-4 rounded-lg shadow-inner">
+                <h4 class="text-lg font-semibold mt-8 mb-4">Visualisasi Data Finansial:</h4>
+                <div class="relative h-72 w-full bg-white p-5 rounded-lg shadow-inner">
                     <canvas id="proposerFinancialChart"></canvas>
                 </div>
             </div>
         </div>
 
         <!-- Bagian Peninjau -->
-        <div id="reviewer-view" class="p-6 bg-white rounded-xl shadow-lg border border-gray-200 hidden">
+        <div id="reviewer-view" class="p-8 bg-white rounded-xl shadow-lg border border-gray-200 hidden">
             <h2 class="section-title">Daftar Nota untuk Ditinjau</h2>
             <div id="reviewer-message-box" class="alert hidden"></div>
 
-            <div id="memo-list" class="space-y-4">
+            <div id="memo-list" class="space-y-6">
                 <!-- Daftar memo akan dimuat di sini -->
-                <p class="text-gray-500 text-center" id="no-memo-message">Belum ada nota yang diajukan untuk ditinjau.</p>
+                <p class="text-gray-500 text-center text-lg" id="no-memo-message">Belum ada nota yang diajukan untuk ditinjau.</p>
             </div>
 
             <!-- Detail Memo Peninjau -->
-            <div id="reviewer-memo-detail" class="mt-8 p-6 bg-gray-50 rounded-xl border border-gray-200 hidden">
-                <button id="back-to-list-btn" class="btn-base btn-secondary mb-4">← Kembali ke Daftar Nota</button>
-                <h3 class="text-xl font-semibold mb-4 text-gray-800">Detail Nota Analisa Investasi</h3>
-                <div id="current-memo-display" class="prose max-w-none text-gray-700 mb-6">
+            <div id="reviewer-memo-detail" class="mt-10 p-8 bg-gray-50 rounded-xl border border-gray-200 hidden">
+                <button id="back-to-list-btn" class="btn-base btn-secondary mb-6">← Kembali ke Daftar Nota</button>
+                <h3 class="text-xl font-semibold mb-5 text-gray-800">Detail Nota Analisa Investasi</h3>
+                <div id="current-memo-display" class="prose max-w-none text-gray-700 mb-8">
                     <!-- Detail memo akan dimuat di sini -->
                 </div>
-                <h4 class="text-lg font-semibold mt-6 mb-2">Visualisasi Data Finansial:</h4>
-                <div class="relative h-64 w-full bg-white p-4 rounded-lg shadow-inner">
+                <h4 class="text-lg font-semibold mt-8 mb-4">Visualisasi Data Finansial:</h4>
+                <div class="relative h-72 w-full bg-white p-5 rounded-lg shadow-inner">
                     <canvas id="reviewerFinancialChart"></canvas>
                 </div>
 
-                <div class="space-y-4 mt-6">
+                <div class="space-y-6 mt-8">
                     <div>
                         <label for="reviewer-comment" class="form-label">Komentar Peninjau:</label>
-                        <textarea id="reviewer-comment" class="form-textarea" rows="4" placeholder="Tambahkan komentar Anda di sini..."></textarea>
+                        <textarea id="reviewer-comment" class="form-textarea" rows="5" placeholder="Tambahkan komentar Anda di sini..."></textarea>
                     </div>
-                    <div class="flex gap-4">
+                    <div class="flex flex-col sm:flex-row gap-4">
                         <button id="submit-comment-btn" class="btn-base btn-primary flex-1">Kirim Komentar</button>
                         <button id="approve-memo-btn" class="btn-base btn-success flex-1">Setujui</button>
                         <button id="reject-memo-btn" class="btn-base btn-danger flex-1">Tolak</button>
@@ -401,11 +380,11 @@
     </div>
 
     <!-- Custom Modal for Alerts/Confirmations -->
-    <div id="custom-modal" class="modal">
-        <div class="modal-content">
-            <h3 id="modal-title" class="text-xl font-semibold mb-4 text-gray-800"></h3>
-            <p id="modal-message" class="text-gray-700 mb-6"></p>
-            <div id="modal-buttons" class="modal-buttons">
+    <div id="custom-modal" class="modal fixed inset-0 flex justify-center items-center z-1000 bg-black bg-opacity-70 transition-opacity duration-300 ease-in-out opacity-0 invisible">
+        <div class="modal-content bg-white p-10 rounded-2xl shadow-2xl max-w-lg w-11/12 text-center transform -translate-y-5 transition-transform duration-300 ease-in-out">
+            <h3 id="modal-title" class="text-2xl font-bold mb-4 text-gray-800"></h3>
+            <p id="modal-message" class="text-gray-700 mb-8 text-lg"></p>
+            <div id="modal-buttons" class="modal-buttons flex justify-center gap-4">
                 <!-- Buttons will be injected here -->
             </div>
         </div>
@@ -413,7 +392,6 @@
 
     <script>
         // Global state for memos
-        // CORRECTED: Ensure localStorage key is consistent
         let memos = JSON.parse(localStorage.getItem('investmentMemos')) || [];
         console.log('Memos loaded on startup:', memos); // Debugging log
 
@@ -461,7 +439,8 @@
             buttons.forEach(button => {
                 const btn = document.createElement('button');
                 btn.textContent = button.text;
-                btn.className = `btn-base ${button.className || 'btn-primary'}`; // Use btn-base
+                // Use btn-base for consistency, and add specific classes if provided
+                btn.className = `btn-base ${button.className || 'btn-primary'}`;
                 btn.onclick = () => {
                     hideModal();
                     if (button.handler) button.handler();
@@ -469,10 +448,14 @@
                 modalButtons.appendChild(btn);
             });
             customModal.classList.add('show');
+            customModal.classList.remove('invisible');
+            customModal.querySelector('.modal-content').style.transform = 'translateY(0)';
         }
 
         function hideModal() {
             customModal.classList.remove('show');
+            customModal.classList.add('invisible');
+            customModal.querySelector('.modal-content').style.transform = 'translateY(-20px)';
         }
 
         function displayMessage(element, message, type) {
@@ -618,7 +601,7 @@
                             display: true,
                             text: 'Ringkasan Metrik Finansial Utama',
                             font: {
-                                size: 16,
+                                size: 18, /* Larger title for chart */
                                 weight: 'bold'
                             },
                             color: '#2d3748'
