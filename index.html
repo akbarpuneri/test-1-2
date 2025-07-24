@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nota Analisa Investasi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Sistem Nota Analisa Investasi</h1>
+        <nav>
+            <button id="btnProposer" class="active">Proposer</button>
+            <button id="btnReviewer">Reviewer</button>
+        </nav>
+    </header>
+
+    <main>
+        <section id="proposerView" class="view active">
+            <h2>Buat Nota Analisa Investasi Baru</h2>
+            <form id="notaForm">
+                <fieldset>
+                    <legend>1. Finansial / Bisnis (Unggah CSV)</legend>
+                    <p>Data finansial akan diisi dari file CSV yang diunggah. Pastikan format CSV memiliki header yang jelas (misal: `Metrik,Nilai`).</p>
+                    <label for="financialCsv">Unggah File CSV Finansial:</label>
+                    <input type="file" id="financialCsv" accept=".csv" required onchange="validateCsvFile()">
+                    <div id="csvPreview" class="csv-preview"></div>
+                    <p class="validation-message" id="csvValidationMessage"></p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>2. Kepentingan / Objektivitas / Tujuan</legend>
+                    <textarea id="aspekKepentingan" rows="4" required placeholder="Diisi Penjelasan singkat sesuai dengan penjelasan pada kajian aspek Kepentingan/Objektivitas/Tujuan menunjukkan bahwa …." aria-label="Aspek Kepentingan"></textarea>
+                    <p class="validation-message" id="aspekKepentinganValidationMessage"></p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>3. Lingkungan, Sosial, dan Ekonomi</legend>
+                    <textarea id="aspekLingkungan" rows="4" required placeholder="Diisi Penjelasan singkat sesuai dengan penjelasan pada kajian aspek Sosial dan Ekonomi menunjukkan bahwa e.g.: Jumlah tenaga kerja yang dilibatkan Kontribusi terhadap GDP Dampak Lingkungan" aria-label="Aspek Lingkungan"></textarea>
+                    <p class="validation-message" id="aspekLingkunganValidationMessage"></p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>4. Fiskal</legend>
+                    <textarea id="aspekFiskal" rows="4" required placeholder="Diisi Penjelasan singkat sesuai dengan penjelasan pada kajian aspek Fiskal menunjukkan bahwa e.g.: Kontribusi Pajak Pemerintah Pusat/Daerah Nilai kontribusi perusahaan sebagai agent of development ( kontribusi pajak dan PNBP sebesar Rp xxx,- , kontribusi Dividen sebesar Rp xxx,- dll) Besaran Insentif Pajak" aria-label="Aspek Fiskal"></textarea>
+                    <p class="validation-message" id="aspekFiskalValidationMessage"></p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>5. Pelayanan dan Operasional</legend>
+                    <textarea id="aspekPelayanan" rows="4" required placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran e.g.: Menjaga skor CSI dengan target sebesar … Downtime Operation (Serviceability Percentage) Length of Stay Meminimalisasi Complain Resolution Rate Peningkatan Jumlah Pengguna Jasa (Penumpang/Wisatawan/Visitor) Peningkatan Occupancy Rate Pemenuhan 3S (Safety, Security, dan Services) Pemenuhan K3 (Kesehatan dan Keselamatan Kerja)" aria-label="Aspek Pelayanan"></textarea>
+                    <p class="validation-message" id="aspekPelayananValidationMessage"></p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>6. Legal</legend>
+                    <textarea id="aspekLegal" rows="4" required placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran e.g.: Analisa Hukum terkait Ketentuan Undang Undang Perseroan Terbatas, BUMN dan Ketentuan Internal Governance di Perusahaan (memuat analisa kewenangan Direksi member membuat keputusan untuk mengajukan usulan rencana) Analisa Hukum terkait Hubungan Hukum dengan Pihak Ketiga (jika ada) Analisa Pelaksanaan Fiduciary Duty Direksi Perusahaan (memuat analisa pelaksanaan FD atas pengajuan usulan rencana) Analisa Hukum terkait Lainnya (jika ada) Analisa Risiko Hukum dan Mitigasi (memuat risiko hukum dari semua analisa di atas, berikut dengan rekomendasi mitigasi)" aria-label="Aspek Legal"></textarea>
+                    <p class="validation-message" id="aspekLegalValidationMessage"></p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>7. Manajemen Risiko</legend>
+                    <textarea id="aspekManajemenRisiko" rows="4" required placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran e.g.: Nilai Eksposur Risiko Biaya MItigasi Risiko" aria-label="Aspek Manajemen Risiko"></textarea>
+                    <p class="validation-message" id="aspekManajemenRisikoValidationMessage"></p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>8. Corporate Governance & Compliance</legend>
+                    <textarea id="aspekCG" rows="4" required placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran e.g.: Penjelasan singkat terkait tingkat kepatuhan terhadap dokumen kelengkapan investasi/aksi korporasi dari Pengusul Penjelasan singkat terkait tingkat kepatuhan internal" aria-label="Aspek Corporate Governance & Compliance"></textarea>
+                    <p class="validation-message" id="aspekCGValidationMessage"></p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>9. Aspek Lainnya</legend>
+                    <textarea id="aspekLainnya" rows="4" placeholder="Dapat diusulkan parameter terkait aspek lainnya oleh Unit Terkait lainnya, e.g.: Meng-counter Sentimen Pemberitaan Pemenuhan SLA untuk IT Maturity SDM" aria-label="Aspek Lainnya"></textarea>
+                </fieldset>
+
+                <button type="submit" id="submitNota">Ajukan Nota</button>
+            </form>
+        </section>
+
+        <section id="reviewerView" class="view">
+            <h2>Daftar Nota untuk Ditinjau</h2>
+            <div id="notaList">
+                <p>Tidak ada nota untuk ditinjau.</p>
+            </div>
+        </section>
+    </main>
+
+    <div id="notificationArea" class="notification-area"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
