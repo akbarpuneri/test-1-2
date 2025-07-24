@@ -3,985 +3,149 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nota Analisa Investasi</title>
+    <title>Login - Nota Analisa Investasi</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font (similar to Injourney's clean sans-serif) -->
+    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Chart.js CDN for interactive graphs -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Base styles inspired by career.injourney.id */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8f8f8; /* Light background, almost white */
             display: flex;
             justify-content: center;
-            align-items: flex-start;
+            align-items: center;
             min-height: 100vh;
-            padding: 2rem 0;
-            color: #333; /* Darker text for readability */
+            color: #333;
         }
-        .container {
-            max-width: 1100px; /* Slightly narrower for a more focused feel */
-            width: 95%;
-            margin: 0 auto;
-            padding: 3rem; /* More generous padding */
+        .login-container {
             background-color: #ffffff;
-            border-radius: 1.25rem; /* Rounded corners */
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08); /* Softer, deeper shadow */
-            border: none; /* No explicit border, rely on shadow */
-        }
-        .section-title {
-            font-size: 2rem; /* Larger, more prominent */
-            font-weight: 700; /* Bolder */
-            color: #1a202c; /* Dark text */
-            margin-bottom: 2.5rem; /* More space below title */
-            border-bottom: 4px solid #0056b3; /* Stronger blue underline */
-            padding-bottom: 1rem;
+            padding: 3rem;
+            border-radius: 1.25rem;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
             text-align: center;
-            letter-spacing: -0.025em; /* Slight letter spacing for headings */
+        }
+        .login-container h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 2rem;
+            border-bottom: 4px solid #0056b3;
+            padding-bottom: 1rem;
+            letter-spacing: -0.025em;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
         }
         .form-label {
             display: block;
             font-weight: 600;
-            color: #4a5568; /* Slightly softer dark gray */
-            margin-bottom: 0.75rem; /* More space */
+            color: #4a5568;
+            margin-bottom: 0.75rem;
             font-size: 0.95rem;
         }
-        .form-input, .form-textarea {
+        .form-input {
             width: 100%;
-            padding: 1rem; /* More padding */
-            border: 1px solid #e2e8f0; /* Light gray border */
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
             border-radius: 0.75rem;
             font-size: 1rem;
             color: #2d3748;
             background-color: #ffffff;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .form-input:focus, .form-textarea:focus {
+        .form-input:focus {
             outline: none;
-            border-color: #007bff; /* Brighter blue on focus */
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Subtle blue glow */
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
         }
-        .btn-base {
-            padding: 1rem 2.25rem; /* More padding */
+        .btn-login {
+            background: linear-gradient(to right, #007bff, #0056b3);
+            color: white;
+            padding: 1rem 2.25rem;
             border-radius: 0.75rem;
             font-weight: 700;
-            transition: all 0.2s ease-in-out; /* Smooth all transitions */
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Softer shadow */
+            transition: all 0.2s ease-in-out;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            cursor: pointer;
         }
-        .btn-primary {
-            background: linear-gradient(to right, #007bff, #0056b3); /* Blue gradient */
-            color: white;
-        }
-        .btn-primary:hover {
+        .btn-login:hover {
             background: linear-gradient(to right, #0056b3, #004085);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
-        .btn-secondary {
-            background-color: #6c757d; /* Gray */
-            color: white;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-        .btn-success {
-            background: linear-gradient(to right, #28a745, #218838); /* Green gradient */
-            color: white;
-        }
-        .btn-success:hover {
-            background: linear-gradient(to right, #218838, #1e7e34);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-        .btn-danger {
-            background: linear-gradient(to right, #dc3545, #c82333); /* Red gradient */
-            color: white;
-        }
-        .btn-danger:hover {
-            background: linear-gradient(to right, #c82333, #bd2130);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-        .alert {
-            padding: 1.25rem; /* More padding */
+        .message-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
             border-radius: 0.75rem;
-            margin-bottom: 2rem; /* More space */
             font-weight: 500;
-            border: 1px solid;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* Subtle shadow for alerts */
+            display: none;
         }
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border-color: #c3e6cb;
-        }
-        .alert-error {
+        .message-box.error {
             background-color: #f8d7da;
             color: #721c24;
-            border-color: #f5c6cb;
-        }
-        .alert-warning {
-            background-color: #fff3cd;
-            color: #856404;
-            border-color: #ffeeba;
-        }
-        .modal {
-            background-color: rgba(0, 0, 0, 0.7); /* Darker overlay */
-        }
-        .modal-content {
-            padding: 3rem; /* More padding */
-            border-radius: 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); /* Stronger, deeper shadow */
-        }
-        .modal-buttons {
-            gap: 1.5rem; /* More space */
-        }
-
-        /* Slider styles (adjusted for better vertical alignment and theme) */
-        .switch-toggle {
-            width: 260px; /* Wider for better text spacing */
-            height: 52px; /* Taller */
-            background-color: #e9ecef; /* Lighter gray background */
-            border-radius: 26px;
-            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1); /* Deeper inner shadow */
-        }
-        .switch-toggle .slider {
-            width: 130px; /* Half of new width */
-            height: 100%;
-            background: linear-gradient(to right, #007bff, #0056b3); /* Blue gradient for slider thumb */
-            border-radius: 26px;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25); /* More prominent thumb shadow */
-        }
-        .switch-toggle input:checked + .slider {
-            transform: translateX(130px); /* Move for reviewer */
-        }
-        .switch-toggle .labels {
-            font-weight: 600;
-            color: #6c757d; /* Softer gray for inactive text */
-        }
-        .switch-toggle .labels span {
-            line-height: 52px; /* Match new height for perfect vertical centering */
-            font-size: 1.05rem; /* Slightly larger font */
-        }
-        .switch-toggle input:not(:checked) ~ .labels span:first-child {
-            color: white;
-        }
-        .switch-toggle input:checked ~ .labels span:last-child {
-            color: white;
-        }
-
-        /* Memo card styles (enhanced) */
-        .memo-card {
-            padding: 1.5rem; /* More padding */
-            border-radius: 1rem; /* More rounded */
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* Softer, deeper shadow */
-            border-left: 6px solid; /* Slightly thinner accent border */
-            transition: all 0.2s ease-in-out;
-        }
-        .memo-card:hover {
-            transform: translateY(-3px) scale(1.005); /* More noticeable lift */
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12); /* Stronger hover shadow */
-        }
-        .memo-card.pending {
-            background-color: #e0f7fa; /* Light cyan */
-            border-color: #00bcd4; /* Cyan */
-        }
-        .memo-card.pending:hover {
-            background-color: #b2ebf2;
-        }
-        .memo-card.approved {
-            background-color: #e8f5e9; /* Light green */
-            border-color: #4caf50; /* Green */
-        }
-        .memo-card.approved:hover {
-            background-color: #c8e6c9;
-        }
-        .memo-card.rejected {
-            background-color: #ffebee; /* Light red */
-            border-color: #f44336; /* Red */
-        }
-        .memo-card.rejected:hover {
-            background-color: #ffcdd2;
-        }
-        .memo-card.warning {
-            border-color: #ff9800; /* Orange */
-            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.08); /* Orange ring */
-        }
-        .memo-card.auto-sent {
-            border-color: #d32f2f; /* Darker red */
-            box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.4), 0 8px 20px rgba(0, 0, 0, 0.08); /* Red ring */
-        }
-
-        /* Prose styles for memo content */
-        .prose h4 {
-            font-size: 1.35rem; /* Slightly larger */
-            font-weight: 700; /* Bolder */
-            margin-top: 1.75rem;
-            margin-bottom: 0.85rem;
-            color: #2d3748;
-            border-bottom: 1px dashed #cbd5e1; /* Subtle dashed line */
-            padding-bottom: 0.4rem;
-        }
-        .prose ul {
-            list-style: disc;
-            margin-left: 1.5rem;
-            padding-left: 0;
-        }
-        .prose li {
-            margin-bottom: 0.4rem;
-            line-height: 1.6;
-        }
-        .prose p {
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-        .comment-box {
-            background-color: #f0f4f8; /* Lighter blue-gray */
-            padding: 1.25rem;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* Inner shadow */
-        }
-        .comment-box p {
-            margin-bottom: 0.5rem;
-        }
-        .comment-box p:last-child {
-            margin-bottom: 0;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
 <body>
-    <div id="app" class="container">
-        <h1 class="text-3xl font-bold text-center mb-10 text-gray-800">Sistem Nota Analisa Investasi</h1>
-
-        <div class="flex justify-center gap-4 mb-10">
-            <label class="switch-toggle">
-                <input type="checkbox" id="view-switcher">
-                <span class="slider"></span>
-                <div class="labels">
-                    <span>Pengusul</span>
-                    <span>Peninjau</span>
-                </div>
-            </label>
-        </div>
-
-        <!-- Bagian Pengusul -->
-        <div id="proposer-view" class="p-8 bg-white rounded-xl shadow-lg border border-gray-200">
-            <h2 class="section-title">Buat Nota Analisa Investasi</h2>
-            <div id="proposer-message-box" class="alert hidden"></div>
-
-            <form id="memo-form" class="space-y-8">
-                <div>
-                    <label for="proposer-name" class="form-label">Nama Pengusul:</label>
-                    <input type="text" id="proposer-name" class="form-input" placeholder="Misal: PT. Anak Perusahaan A" required>
-                </div>
-
-                <!-- Aspek Finansial / Bisnis (dari CSV) -->
-                <div>
-                    <label for="financial-csv" class="form-label">Aspek Finansial / Bisnis (Unggah File CSV):</label>
-                    <input type="file" id="financial-csv" accept=".csv" class="form-input p-2" required>
-                    <div id="financial-data-preview" class="mt-3 p-4 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 hidden">
-                        <p class="font-semibold mb-2">Data Finansial Terunggah:</p>
-                        <pre id="financial-data-content" class="whitespace-pre-wrap font-mono text-xs"></pre>
-                    </div>
-                </div>
-
-                <!-- Aspek Kajian Lainnya (Manual Input) -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div>
-                        <label for="kepentingan-objektivitas" class="form-label">2. Kepentingan / Objektivitas / Tujuan:</label>
-                        <textarea id="kepentingan-objektivitas" class="form-textarea" rows="4" placeholder="Penjelasan singkat sesuai dengan kajian aspek Kepentingan/Objektivitas/Tujuan..." required></textarea>
-                    </div>
-                    <div>
-                        <label for="lingkungan-sosial-ekonomi" class="form-label">3. Lingkungan, Sosial, dan Ekonomi:</label>
-                        <textarea id="lingkungan-sosial-ekonomi" class="form-textarea" rows="4" placeholder="Penjelasan singkat sesuai dengan kajian aspek Sosial dan Ekonomi..." required></textarea>
-                    </div>
-                    <div>
-                        <label for="fiskal" class="form-label">4. Fiskal:</label>
-                        <textarea id="fiskal" class="form-textarea" rows="4" placeholder="Penjelasan singkat sesuai dengan kajian aspek Fiskal..." required></textarea>
-                    </div>
-                    <div>
-                        <label for="pelayanan-operasional" class="form-label">5. Pelayanan dan Operasional:</label>
-                        <textarea id="pelayanan-operasional" class="form-textarea" rows="4" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
-                    </div>
-                    <div>
-                        <label for="legal" class="form-label">6. Legal:</label>
-                        <textarea id="legal" class="form-textarea" rows="4" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
-                    </div>
-                    <div>
-                        <label for="manajemen-risiko" class="form-label">7. Manajemen Risiko:</label>
-                        <textarea id="manajemen-risiko" class="form-textarea" rows="4" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
-                    </div>
-                    <div>
-                        <label for="corporate-governance" class="form-label">8. Corporate Governance & Compliance:</label>
-                        <textarea id="corporate-governance" class="form-textarea" rows="4" placeholder="Diisi sesuai dengan penjelasan pada kajian / lampiran..." required></textarea>
-                    </div>
-                    <div>
-                        <label for="aspek-lainnya" class="form-label">9. Aspek Lainnya:</label>
-                        <textarea id="aspek-lainnya" class="form-textarea" rows="4" placeholder="Dapat diusulkan parameter terkait aspek lainnya oleh Unit Terkait lainnya..." required></textarea>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-base btn-primary w-full mt-8">Buat Nota Analisa Investasi</button>
-            </form>
-
-            <div id="generated-memo-preview" class="mt-10 p-8 bg-gray-50 rounded-xl border border-gray-200 hidden">
-                <h3 class="text-xl font-semibold mb-5 text-gray-800">Pratinjau Nota Analisa Investasi</h3>
-                <div id="memo-content" class="prose max-w-none text-gray-700">
-                    <!-- Memo content will be rendered here -->
-                </div>
-                <h4 class="text-lg font-semibold mt-8 mb-4">Visualisasi Data Finansial:</h4>
-                <div class="relative h-72 w-full bg-white p-5 rounded-lg shadow-inner">
-                    <canvas id="proposerFinancialChart"></canvas>
-                </div>
+    <div class="login-container">
+        <h1>Login</h1>
+        <div id="message-box" class="message-box"></div>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="user-id" class="form-label">ID Pengguna:</label>
+                <input type="text" id="user-id" class="form-input" placeholder="Masukkan ID Pengguna" required>
             </div>
-        </div>
-
-        <!-- Bagian Peninjau -->
-        <div id="reviewer-view" class="p-8 bg-white rounded-xl shadow-lg border border-gray-200 hidden">
-            <h2 class="section-title">Daftar Nota untuk Ditinjau</h2>
-            <div id="reviewer-message-box" class="alert hidden"></div>
-
-            <div id="memo-list" class="space-y-6">
-                <!-- Daftar memo akan dimuat di sini -->
-                <p class="text-gray-500 text-center text-lg" id="no-memo-message">Belum ada nota yang diajukan untuk ditinjau.</p>
+            <div class="form-group">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" id="password" class="form-input" placeholder="Masukkan Password" required>
             </div>
-
-            <!-- Detail Memo Peninjau -->
-            <div id="reviewer-memo-detail" class="mt-10 p-8 bg-gray-50 rounded-xl border border-gray-200 hidden">
-                <button id="back-to-list-btn" class="btn-base btn-secondary mb-6">← Kembali ke Daftar Nota</button>
-                <h3 class="text-xl font-semibold mb-5 text-gray-800">Detail Nota Analisa Investasi</h3>
-                <div id="current-memo-display" class="prose max-w-none text-gray-700 mb-8">
-                    <!-- Detail memo akan dimuat di sini -->
-                </div>
-                <h4 class="text-lg font-semibold mt-8 mb-4">Visualisasi Data Finansial:</h4>
-                <div class="relative h-72 w-full bg-white p-5 rounded-lg shadow-inner">
-                    <canvas id="reviewerFinancialChart"></canvas>
-                </div>
-
-                <div class="space-y-6 mt-8">
-                    <div>
-                        <label for="reviewer-comment" class="form-label">Komentar Peninjau:</label>
-                        <textarea id="reviewer-comment" class="form-textarea" rows="5" placeholder="Tambahkan komentar Anda di sini..."></textarea>
-                    </div>
-                    <div class="flex flex-col sm:flex-row gap-4">
-                        <button id="submit-comment-btn" class="btn-base btn-primary flex-1">Kirim Komentar</button>
-                        <button id="approve-memo-btn" class="btn-base btn-success flex-1">Setujui</button>
-                        <button id="reject-memo-btn" class="btn-base btn-danger flex-1">Tolak</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Custom Modal for Alerts/Confirmations -->
-    <div id="custom-modal" class="modal fixed inset-0 flex justify-center items-center z-1000 bg-black bg-opacity-70 transition-opacity duration-300 ease-in-out opacity-0 invisible">
-        <div class="modal-content bg-white p-10 rounded-2xl shadow-2xl max-w-lg w-11/12 text-center transform -translate-y-5 transition-transform duration-300 ease-in-out">
-            <h3 id="modal-title" class="text-2xl font-bold mb-4 text-gray-800"></h3>
-            <p id="modal-message" class="text-gray-700 mb-8 text-lg"></p>
-            <div id="modal-buttons" class="modal-buttons flex justify-center gap-4">
-                <!-- Buttons will be injected here -->
-            </div>
-        </div>
+            <button type="submit" class="btn-login">Login</button>
+        </form>
     </div>
 
     <script>
-        // Global state for memos
-        let memos = JSON.parse(localStorage.getItem('investmentMemos')) || [];
-        console.log('Memos loaded on startup:', memos); // Debugging log
-
-        let currentFinancialData = null;
-        let currentMemoId = null; // To keep track of the memo being reviewed
-        let proposerChartInstance = null; // To store Chart.js instance for proposer view
-        let reviewerChartInstance = null; // To store Chart.js instance for reviewer view
-
-        // DOM Elements
-        const proposerView = document.getElementById('proposer-view');
-        const reviewerView = document.getElementById('reviewer-view');
-        const viewSwitcher = document.getElementById('view-switcher'); // The new slider checkbox
-        const memoForm = document.getElementById('memo-form');
-        const financialCsvInput = document.getElementById('financial-csv');
-        const financialDataPreview = document.getElementById('financial-data-preview');
-        const financialDataContent = document.getElementById('financial-data-content');
-        const generatedMemoPreview = document.getElementById('generated-memo-preview');
-        const memoContentDiv = document.getElementById('memo-content');
-        const memoListDiv = document.getElementById('memo-list');
-        const reviewerMemoDetailDiv = document.getElementById('reviewer-memo-detail');
-        const backToListBtn = document.getElementById('back-to-list-btn');
-        const currentMemoDisplay = document.getElementById('current-memo-display');
-        const reviewerCommentInput = document.getElementById('reviewer-comment');
-        const submitCommentBtn = document.getElementById('submit-comment-btn');
-        const approveMemoBtn = document.getElementById('approve-memo-btn');
-        const rejectMemoBtn = document.getElementById('reject-memo-btn');
-        const noMemoMessage = document.getElementById('no-memo-message');
-
-        const proposerMessageBox = document.getElementById('proposer-message-box');
-        const reviewerMessageBox = document.getElementById('reviewer-message-box');
-
-        // Modal Elements
-        const customModal = document.getElementById('custom-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMessage = document.getElementById('modal-message');
-        const modalButtons = document.getElementById('modal-buttons');
-
-        // --- Utility Functions ---
-
-        function showModal(title, message, buttons) {
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modalButtons.innerHTML = ''; // Clear previous buttons
-
-            buttons.forEach(button => {
-                const btn = document.createElement('button');
-                btn.textContent = button.text;
-                // Use btn-base for consistency, and add specific classes if provided
-                btn.className = `btn-base ${button.className || 'btn-primary'}`;
-                btn.onclick = () => {
-                    hideModal();
-                    if (button.handler) button.handler();
-                };
-                modalButtons.appendChild(btn);
-            });
-            customModal.classList.add('show');
-            customModal.classList.remove('invisible');
-            customModal.querySelector('.modal-content').style.transform = 'translateY(0)';
-        }
-
-        function hideModal() {
-            customModal.classList.remove('show');
-            customModal.classList.add('invisible');
-            customModal.querySelector('.modal-content').style.transform = 'translateY(-20px)';
-        }
-
-        function displayMessage(element, message, type) {
-            element.textContent = message;
-            element.className = `alert ${type === 'success' ? 'alert-success' : type === 'error' ? 'alert-error' : 'alert-warning'}`;
-            element.classList.remove('hidden');
-            setTimeout(() => {
-                element.classList.add('hidden');
-            }, 5000);
-        }
-
-        function saveMemos() {
-            localStorage.setItem('investmentMemos', JSON.stringify(memos));
-            console.log('Memos saved:', memos); // Debugging log
-        }
-
-        function generateUniqueId() {
-            return 'memo-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-        }
-
-        // Function to parse CSV data
-        function parseCSV(text) {
-            const lines = text.split('\n').filter(line => line.trim() !== '');
-            if (lines.length === 0) return {};
-
-            const result = {};
-            lines.forEach(line => {
-                const parts = line.split(',');
-                if (parts.length >= 2) {
-                    const key = parts[0].trim();
-                    let valueStr = parts.slice(1).join(',').trim(); // Keep as string for initial check
-
-                    let value;
-                    // First, try to parse as percentage if it ends with '%'
-                    if (valueStr.endsWith('%')) {
-                        value = parseFloat(valueStr.slice(0, -1).replace(/,/g, '')) / 100;
-                    } else {
-                        // Otherwise, try to parse as a regular number
-                        value = parseFloat(valueStr.replace(/,/g, ''));
-                    }
-
-                    // If parsing failed, keep the original string value
-                    if (isNaN(value)) {
-                        value = valueStr;
-                    }
-                    result[key] = value;
-                }
-            });
-            return result;
-        }
-
-        // Function to format date for display
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-            return new Date(dateString).toLocaleDateString('id-ID', options);
-        }
-
-        // --- Charting Functionality ---
-        function renderFinancialChart(canvasId, financialData, chartInstance) {
-            const ctx = document.getElementById(canvasId);
-
-            // Destroy existing chart instance if it exists
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
-
-            // Extract relevant financial metrics for the chart
-            const labels = [];
-            const data = [];
-            const backgroundColors = [];
-            const borderColors = [];
-
-            const metricsToChart = {
-                'EBITDA Margin': 'rgba(75, 192, 192, 0.7)', /* Teal */
-                'Net Profit Margin': 'rgba(153, 102, 255, 0.7)', /* Purple */
-                'ROE': 'rgba(255, 159, 64, 0.7)', /* Orange */
-                'ROA': 'rgba(54, 162, 235, 0.7)', /* Blue */
-                'Current Ratio': 'rgba(255, 99, 132, 0.7)', /* Red */
-                'Liquidity Buffer': 'rgba(201, 203, 207, 0.7)', /* Gray */
-                'IBD to Invested Capital': 'rgba(255, 205, 86, 0.7)', /* Yellow */
-                'DSCR': 'rgba(75, 192, 192, 0.7)', /* Teal (re-use) */
-                'Economic profit': 'rgba(192, 75, 192, 0.7)', /* Pink */
-                'NPV': 'rgba(54, 162, 235, 0.7)', /* Blue (re-use) */
-                'IRR': 'rgba(153, 102, 255, 0.7)' /* Purple (re-use) */
-            };
-
-            for (const metric in metricsToChart) {
-                if (financialData[metric] !== undefined && financialData[metric] !== null) {
-                    let value = financialData[metric];
-                    // Ensure value is a number for charting
-                    if (typeof value === 'string') {
-                        value = parseFloat(value.replace(/,/g, ''));
-                        if (value.toString().endsWith('%')) { // If it was originally a percentage string
-                             value = value / 100; // Convert to decimal
-                        }
-                    }
-
-                    if (!isNaN(value)) {
-                        labels.push(metric);
-                        data.push(value);
-                        backgroundColors.push(metricsToChart[metric]);
-                        borderColors.push(metricsToChart[metric].replace('0.7', '1')); // Opaque border
-                    }
-                }
-            }
-
-            if (labels.length === 0) {
-                ctx.style.display = 'none'; // Hide canvas if no data
-                return null;
-            } else {
-                ctx.style.display = 'block';
-            }
-
-            const newChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Nilai Metrik Finansial',
-                        data: data,
-                        backgroundColor: backgroundColors,
-                        borderColor: borderColors,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Nilai'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: true,
-                            text: 'Ringkasan Metrik Finansial Utama',
-                            font: {
-                                size: 18, /* Larger title for chart */
-                                weight: 'bold'
-                            },
-                            color: '#2d3748'
-                        }
-                    }
-                }
-            });
-            return newChartInstance;
-        }
-
-
-        // --- Proposer View Logic ---
-
-        financialCsvInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (!file) {
-                currentFinancialData = null;
-                financialDataPreview.classList.add('hidden');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const csvText = e.target.result;
-                    currentFinancialData = parseCSV(csvText);
-                    financialDataContent.textContent = JSON.stringify(currentFinancialData, null, 2);
-                    financialDataPreview.classList.remove('hidden');
-                    displayMessage(proposerMessageBox, 'File CSV berhasil diunggah dan diproses.', 'success');
-                } catch (error) {
-                    displayMessage(proposerMessageBox, 'Gagal memproses file CSV: ' + error.message, 'error');
-                    currentFinancialData = null;
-                    financialDataPreview.classList.add('hidden');
-                }
-            };
-            reader.readAsText(file);
-        });
-
-        memoForm.addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            // Validate all fields are filled
-            const formInputs = memoForm.querySelectorAll('.form-input, .form-textarea');
-            let allFieldsFilled = true;
-            formInputs.forEach(input => {
-                if (!input.value.trim() && input.required) { // Check only required fields
-                    allFieldsFilled = false;
-                    input.classList.add('border-red-500'); // Highlight empty fields
-                } else {
-                    input.classList.remove('border-red-500');
-                }
-            });
-
-            if (!currentFinancialData || Object.keys(currentFinancialData).length === 0) {
-                allFieldsFilled = false;
-                financialCsvInput.classList.add('border-red-500');
-                displayMessage(proposerMessageBox, 'Harap unggah file CSV finansial yang valid.', 'error');
-            } else {
-                financialCsvInput.classList.remove('border-red-500');
-            }
-
-            if (!allFieldsFilled) {
-                displayMessage(proposerMessageBox, 'Harap lengkapi semua bidang yang wajib diisi.', 'error');
-                return;
-            }
-
-            const proposerName = document.getElementById('proposer-name').value;
-            const submissionDate = new Date();
-            const reviewDeadline = new Date(submissionDate);
-            reviewDeadline.setDate(submissionDate.getDate() + 3); // 3 days for warning
-            const autoSendDate = new Date(submissionDate);
-            autoSendDate.setDate(submissionDate.getDate() + 5); // 5 days for auto-send
-
-            const newMemo = {
-                id: generateUniqueId(),
-                proposerName: proposerName,
-                submissionDate: submissionDate.toISOString(),
-                status: 'pending', // 'pending', 'approved', 'rejected'
-                financialData: currentFinancialData,
-                aspects: {
-                    kepentingan: document.getElementById('kepentingan-objektivitas').value,
-                    lingkungan: document.getElementById('lingkungan-sosial-ekonomi').value,
-                    fiskal: document.getElementById('fiskal').value,
-                    pelayanan: document.getElementById('pelayanan-operasional').value,
-                    legal: document.getElementById('legal').value,
-                    manajemenRisiko: document.getElementById('manajemen-risiko').value,
-                    corporateGovernance: document.getElementById('corporate-governance').value,
-                    aspekLainnya: document.getElementById('aspek-lainnya').value
-                },
-                reviewerComments: [], // Can be extended to include multiple reviewers
-                reviewDeadline: reviewDeadline.toISOString(),
-                autoSendDate: autoSendDate.toISOString(),
-                lastReviewCheck: submissionDate.toISOString(), // To track when last checked for warnings/auto-send
-                autoSent: false // Flag to prevent repeated auto-send notifications
-            };
-
-            memos.push(newMemo);
-            saveMemos(); // Save memos after adding a new one
-            renderMemoPreview(newMemo);
-            displayMessage(proposerMessageBox, 'Nota Analisa Investasi berhasil dibuat dan diajukan!', 'success');
-            memoForm.reset(); // Clear form
-            currentFinancialData = null;
-            financialDataPreview.classList.add('hidden');
-        });
-
-        function renderMemoPreview(memo) {
-            let financialHtml = '<ul>';
-            for (const key in memo.financialData) {
-                // Display numbers formatted nicely, e.g., with 2 decimal places or as percentages
-                let displayValue = memo.financialData[key];
-                if (typeof displayValue === 'number') {
-                    if (key.includes('Margin') || key.includes('ROE') || key.includes('ROA') || key.includes('IRR')) {
-                        displayValue = (displayValue * 100).toFixed(2) + '%'; // Format as percentage
-                    } else if (key.includes('NPV') || key.includes('Economic profit')) {
-                        displayValue = 'Rp ' + displayValue.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); // Format as IDR
-                    } else {
-                        displayValue = displayValue.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-                    }
-                }
-                financialHtml += `<li><strong>${key}:</strong> ${displayValue}</li>`;
-            }
-            financialHtml += '</ul>';
-
-            memoContentDiv.innerHTML = `
-                <p class="mb-2"><strong class="text-gray-700">Nama Pengusul:</strong> ${memo.proposerName}</p>
-                <p class="mb-2"><strong class="text-gray-700">Tanggal Pengajuan:</strong> ${formatDate(memo.submissionDate)}</p>
-                <p class="mb-4"><strong class="text-gray-700">Status:</strong> <span class="font-semibold text-blue-600">${memo.status.toUpperCase()}</span></p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">1. Finansial / Bisnis:</h4>
-                ${financialHtml}
-                <h4 class="text-lg font-semibold mt-4 mb-2">2. Kepentingan / Objektivitas / Tujuan:</h4>
-                <p>${memo.aspects.kepentingan}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">3. Lingkungan, Sosial, dan Ekonomi:</h4>
-                <p>${memo.aspects.lingkungan}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">4. Fiskal:</h4>
-                <p>${memo.aspects.fiskal}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">5. Pelayanan dan Operasional:</h4>
-                <p>${memo.aspects.pelayanan}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">6. Legal:</h4>
-                <p>${memo.aspects.legal}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">7. Manajemen Risiko:</h4>
-                <p>${memo.aspects.manajemenRisiko}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">8. Corporate Governance & Compliance:</h4>
-                <p>${memo.aspects.corporateGovernance}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">9. Aspek Lainnya:</h4>
-                <p>${memo.aspects.aspekLainnya}</p>
-            `;
-            generatedMemoPreview.classList.remove('hidden');
-
-            // Render chart for proposer view
-            proposerChartInstance = renderFinancialChart('proposerFinancialChart', memo.financialData, proposerChartInstance);
-        }
-
-        // --- Reviewer View Logic ---
-
-        function renderReviewerList() {
-            memoListDiv.innerHTML = ''; // Clear existing list
-            reviewerMemoDetailDiv.classList.add('hidden'); // Hide detail view when showing list
-
-            if (memos.length === 0) {
-                noMemoMessage.classList.remove('hidden');
-                return;
-            } else {
-                noMemoMessage.classList.add('hidden');
-            }
-
-            memos.forEach(memo => {
-                const now = new Date();
-                const reviewDeadline = new Date(memo.reviewDeadline);
-                const autoSendDate = new Date(memo.autoSendDate);
-
-                let statusText = `<span class="font-semibold text-blue-600">${memo.status.toUpperCase()}</span>`;
-                let cardClasses = `memo-card ${memo.status}`; // Base classes
-                let notificationMessage = '';
-
-                if (memo.status === 'pending') {
-                    if (now > autoSendDate) {
-                        statusText = `<span class="font-semibold text-red-600">OTOMATIS DIKIRIM (Belum Ditinjau)</span>`;
-                        cardClasses += ' auto-sent'; // Stronger highlight
-                        if (!memo.autoSent) { // Trigger notification only once
-                            notificationMessage = `Nota "${memo.proposerName}" (ID: ${memo.id.substring(0, 8)}) otomatis dikirim kembali ke pengusul karena belum ditinjau setelah 5 hari.`;
-                            memo.autoSent = true; // Mark as auto-sent
-                            saveMemos();
-                        }
-                    } else if (now > reviewDeadline) {
-                        statusText = `<span class="font-semibold text-orange-600">PERINGATAN (Lewat 3 Hari)</span>`;
-                        cardClasses += ' warning'; // Highlight
-                        // Only show warning if not already auto-sent
-                        if (!memo.autoSent) {
-                            notificationMessage = `Peringatan: Nota "${memo.proposerName}" (ID: ${memo.id.substring(0, 8)}) telah melewati batas waktu 3 hari peninjauan.`;
-                        }
-                    }
-                }
-
-                if (notificationMessage) {
-                    displayMessage(reviewerMessageBox, notificationMessage, 'warning');
-                }
-
-                const memoCard = document.createElement('div');
-                memoCard.className = cardClasses;
-
-                memoCard.innerHTML = `
-                    <h4 class="text-lg font-semibold text-gray-800 mb-1">${memo.proposerName}</h4>
-                    <p class="text-sm text-gray-600 mb-0.5">Diajukan: ${formatDate(memo.submissionDate)}</p>
-                    <p class="text-sm text-gray-600 mb-0.5">ID Nota: ${memo.id.substring(0, 10)}...</p>
-                    <p class="text-sm text-gray-600">Status: ${statusText}</p>
-                `;
-                memoCard.addEventListener('click', () => viewMemoDetails(memo.id));
-                memoListDiv.appendChild(memoCard);
-            });
-            console.log('Reviewer list rendered. Memos count:', memos.length); // Debugging log
-        }
-
-        function viewMemoDetails(memoId) {
-            currentMemoId = memoId;
-            const memo = memos.find(m => m.id === memoId);
-            if (!memo) {
-                displayMessage(reviewerMessageBox, 'Nota tidak ditemukan.', 'error');
-                return;
-            }
-
-            let financialHtml = '<ul>';
-            for (const key in memo.financialData) {
-                // Display numbers formatted nicely, e.g., with 2 decimal places or as percentages
-                let displayValue = memo.financialData[key];
-                if (typeof displayValue === 'number') {
-                    if (key.includes('Margin') || key.includes('ROE') || key.includes('ROA') || key.includes('IRR')) {
-                        displayValue = (displayValue * 100).toFixed(2) + '%'; // Format as percentage
-                    } else if (key.includes('NPV') || key.includes('Economic profit')) {
-                        displayValue = 'Rp ' + displayValue.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 }); // Format as IDR
-                    } else {
-                        displayValue = displayValue.toLocaleString('id-ID', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-                    }
-                }
-                financialHtml += `<li><strong>${key}:</strong> ${displayValue}</li>`;
-            }
-            financialHtml += '</ul>';
-
-            let commentsHtml = '';
-            if (memo.reviewerComments.length > 0) {
-                commentsHtml = '<h4 class="text-lg font-semibold mt-6 mb-2">Komentar Peninjau:</h4>';
-                memo.reviewerComments.forEach(comment => {
-                    commentsHtml += `
-                        <div class="comment-box">
-                            <p class="text-sm font-semibold text-gray-800">${comment.reviewerId} pada ${formatDate(comment.date)}:</p>
-                            <p class="text-gray-700">${comment.comment}</p>
-                        </div>
-                    `;
-                });
-            } else {
-                commentsHtml = '<p class="text-gray-500 mt-4">Belum ada komentar.</p>';
-            }
-
-            currentMemoDisplay.innerHTML = `
-                <p class="mb-2"><strong class="text-gray-700">Nama Pengusul:</strong> ${memo.proposerName}</p>
-                <p class="mb-2"><strong class="text-gray-700">Tanggal Pengajuan:</strong> ${formatDate(memo.submissionDate)}</p>
-                <p class="mb-4"><strong class="text-gray-700">Status:</strong> <span class="font-semibold text-blue-600">${memo.status.toUpperCase()}</span></p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">1. Finansial / Bisnis:</h4>
-                ${financialHtml}
-                <h4 class="text-lg font-semibold mt-4 mb-2">2. Kepentingan / Objektivitas / Tujuan:</h4>
-                <p>${memo.aspects.kepentingan}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">3. Lingkungan, Sosial, dan Ekonomi:</h4>
-                <p>${memo.aspects.lingkungan}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">4. Fiskal:</h4>
-                <p>${memo.aspects.fiskal}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">5. Pelayanan dan Operasional:</h4>
-                <p>${memo.aspects.pelayanan}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">6. Legal:</h4>
-                <p>${memo.aspects.legal}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">7. Manajemen Risiko:</h4>
-                <p>${memo.aspects.manajemenRisiko}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">8. Corporate Governance & Compliance:</h4>
-                <p>${memo.aspects.corporateGovernance}</p>
-                <h4 class="text-lg font-semibold mt-4 mb-2">9. Aspek Lainnya:</h4>
-                <p>${memo.aspects.aspekLainnya}</p>
-                ${commentsHtml}
-            `;
-
-            reviewerMemoDetailDiv.classList.remove('hidden');
-            // Render chart for reviewer view
-            reviewerChartInstance = renderFinancialChart('reviewerFinancialChart', memo.financialData, reviewerChartInstance);
-        }
-
-        submitCommentBtn.addEventListener('click', () => {
-            const commentText = reviewerCommentInput.value.trim();
-            if (!commentText) {
-                displayMessage(reviewerMessageBox, 'Komentar tidak boleh kosong.', 'warning');
-                return;
-            }
-
-            const memoIndex = memos.findIndex(m => m.id === currentMemoId);
-            if (memoIndex > -1) {
-                // For simplicity, using a generic reviewer ID. In a real app, this would be authenticated user ID.
-                const reviewerId = 'Peninjau_1'; // Example reviewer ID
-                memos[memoIndex].reviewerComments.push({
-                    reviewerId: reviewerId,
-                    comment: commentText,
-                    date: new Date().toISOString()
-                });
-                // Ensure the memo status is still 'pending' if a comment is added
-                if (memos[memoIndex].status === 'Dikembalikan untuk Revisi/Tindak Lanjut') {
-                    memos[memoIndex].status = 'pending'; // Change back to pending if it was returned
-                    memos[memoIndex].autoSent = false; // Reset auto-sent flag
-                }
-                saveMemos();
-                displayMessage(reviewerMessageBox, 'Komentar berhasil ditambahkan.', 'success');
-                reviewerCommentInput.value = ''; // Clear comment field
-                viewMemoDetails(currentMemoId); // Re-render details to show new comment
-            }
-        });
-
-        approveMemoBtn.addEventListener('click', () => {
-            showModal('Konfirmasi Persetujuan', 'Apakah Anda yakin ingin menyetujui nota ini?', [
-                { text: 'Ya, Setujui', className: 'btn-success', handler: () => updateMemoStatus('approved') },
-                { text: 'Batal', className: 'btn-secondary' }
-            ]);
-        });
-
-        rejectMemoBtn.addEventListener('click', () => {
-            showModal('Konfirmasi Penolakan', 'Apakah Anda yakin ingin menolak nota ini?', [
-                { text: 'Ya, Tolak', className: 'btn-danger', handler: () => updateMemoStatus('rejected') },
-                { text: 'Batal', className: 'btn-secondary' }
-            ]);
-        });
-
-        function updateMemoStatus(status) {
-            const memoIndex = memos.findIndex(m => m.id === currentMemoId);
-            if (memoIndex > -1) {
-                memos[memoIndex].status = status;
-                // Reset auto-sent flag if action is taken
-                memos[memoIndex].autoSent = false;
-                saveMemos();
-                displayMessage(reviewerMessageBox, `Nota berhasil ${status === 'approved' ? 'disetujui' : 'ditolak'}.`, 'success');
-                renderReviewerList(); // Go back to list and refresh
-                reviewerMemoDetailDiv.classList.add('hidden');
-            }
-        }
-
-        backToListBtn.addEventListener('click', () => {
-            renderReviewerList();
-            reviewerMemoDetailDiv.classList.add('hidden');
-        });
-
-        // --- View Switching Logic ---
-
-        function showView(viewName) {
-            proposerView.classList.add('hidden');
-            reviewerView.classList.add('hidden');
-
-            // Disable/enable form fields based on view
-            const formInputs = memoForm.querySelectorAll('input, textarea, button[type="submit"]');
-            if (viewName === 'proposer') {
-                proposerView.classList.remove('hidden');
-                formInputs.forEach(input => input.removeAttribute('disabled'));
-            } else if (viewName === 'reviewer') {
-                reviewerView.classList.remove('hidden');
-                formInputs.forEach(input => input.setAttribute('disabled', 'true'));
-                renderReviewerList(); // Refresh reviewer list when entering view
-            }
-        }
-
-        // Event listener for the slider
-        viewSwitcher.addEventListener('change', (event) => {
-            if (event.target.checked) {
-                // Checked means Reviewer
-                showView('reviewer');
-            } else {
-                // Unchecked means Proposer
-                showView('proposer');
-            }
-        });
-
-        // Initial load
         document.addEventListener('DOMContentLoaded', () => {
-            // Set initial state of the slider and view
-            viewSwitcher.checked = false; // Default to Proposer
-            showView('proposer');
+            const loginForm = document.getElementById('login-form');
+            const userIdInput = document.getElementById('user-id');
+            const passwordInput = document.getElementById('password');
+            const messageBox = document.getElementById('message-box');
 
-            // Periodically check for review deadlines (simplified for client-side app)
-            // This interval will trigger renderReviewerList, which handles notifications
-            setInterval(renderReviewerList, 10 * 1000); // Check every 10 seconds for demo purposes
+            // Hardcoded credentials
+            const credentials = {
+                "pengusul": "1234",
+                "peninjau": "1234"
+            };
+
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userId = userIdInput.value.toLowerCase(); // Case-insensitive ID
+                const password = passwordInput.value;
+
+                messageBox.style.display = 'none';
+                messageBox.className = 'message-box'; // Reset classes
+
+                if (credentials[userId] && credentials[userId] === password) {
+                    let role = '';
+                    if (userId === 'pengusul') {
+                        role = 'proposer';
+                    } else if (userId === 'peninjau') {
+                        role = 'reviewer';
+                    }
+
+                    localStorage.setItem('currentUserRole', role);
+                    window.location.href = 'app.html'; // Redirect to the main application
+                } else {
+                    messageBox.textContent = 'ID Pengguna atau Password salah.';
+                    messageBox.classList.add('error');
+                    messageBox.style.display = 'block';
+                }
+            });
         });
     </script>
 </body>
